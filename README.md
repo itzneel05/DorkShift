@@ -124,7 +124,6 @@ Additional documentation is available as Markdown files in the project root:
 | [`FAQ.md`](./FAQ.md) | Frequently asked questions |
 | [`GLOSSARY.md`](./GLOSSARY.md) | Project-specific terminology |
 | [`CONTRIBUTING.md`](./CONTRIBUTING.md) | How to contribute |
-| [`CHANGELOG.md`](./CHANGELOG.md) | Version history |
 
 ## License
 
