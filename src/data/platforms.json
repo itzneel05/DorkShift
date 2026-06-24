@@ -3,72 +3,228 @@
     "id": "google",
     "name": "Google",
     "url_template": "https://www.google.com/search?q={dork}",
-    "syntax_guide": "Use standard Google search operators: site:, inurl:, intitle:, filetype:, \"exact phrase\", | (OR), - (exclude)"
+    "syntax_guide": "site: | inurl: | intitle: | filetype: | intext: | \"exact phrase\" | OR | -exclude",
+    "relay": null,
+    "operators": {
+      "scope": ["site:", "inurl:"],
+      "content": ["intitle:", "intext:", "filetype:"],
+      "metadata": [],
+      "date": []
+    },
+    "target_types": {
+      "d": "site:",
+      "o": null,
+      "r": null,
+      "h": null
+    }
   },
   {
     "id": "github",
     "name": "GitHub",
     "url_template": "https://github.com/search?q={dork}&type=code",
-    "syntax_guide": "Use GitHub code search syntax: repo:, user:, language:, path:, extension:, \"exact string\""
+    "syntax_guide": "repo: | user: | language: | path: | extension: | \"exact string\"",
+    "relay": null,
+    "operators": {
+      "scope": ["repo:", "user:"],
+      "content": [],
+      "metadata": ["language:", "path:", "extension:"],
+      "date": []
+    },
+    "target_types": {
+      "d": null,
+      "o": "repo:",
+      "r": "repo:",
+      "h": null
+    }
   },
   {
     "id": "shodan",
     "name": "Shodan",
     "url_template": "https://www.shodan.io/search?query={dork}",
-    "syntax_guide": "Use Shodan filters: port:, country:, city:, org:, os:, hostname:, product:, vuln:"
+    "syntax_guide": "port: | country: | city: | org: | hostname: | product: | net: | os:",
+    "relay": null,
+    "operators": {
+      "scope": ["org:", "hostname:", "net:"],
+      "content": [],
+      "metadata": ["port:", "country:", "city:", "os:", "product:"],
+      "date": []
+    },
+    "target_types": {
+      "d": "hostname:",
+      "o": "org:",
+      "r": null,
+      "h": "net:"
+    }
   },
   {
     "id": "censys",
     "name": "Censys",
-    "url_template": "https://search.censys.io/search?resource=hosts&q={dork}",
-    "syntax_guide": "Use Censys search syntax: services.service_name:, location.country:, services.port:, labels:"
+    "url_template": "https://platform.censys.io/search?resource=hosts&q={dork}",
+    "syntax_guide": "services.service_name: | location.country: | services.port: | labels: | host.ip: | cert.names: (certs)",
+    "relay": null,
+    "operators": {
+      "scope": [],
+      "content": ["services.service_name:", "labels:"],
+      "metadata": ["location.country:", "services.port:", "host.ip:"],
+      "date": []
+    },
+    "target_types": {
+      "d": null,
+      "o": null,
+      "r": null,
+      "h": "host.ip:"
+    }
   },
   {
     "id": "x_twitter",
     "name": "X / Twitter",
     "url_template": "https://x.com/search?q={dork}&src=typed_query",
-    "syntax_guide": "Use X search operators: from:, to:, url:, lang:, min_replies:, has:media, has:links"
+    "syntax_guide": "from: | to: | url: | lang: | min_replies: | has:media | filter:links | filter:media",
+    "relay": null,
+    "operators": {
+      "scope": ["from:", "to:", "url:"],
+      "content": [],
+      "metadata": ["lang:", "min_replies:", "has:", "filter:"],
+      "date": []
+    },
+    "target_types": {
+      "d": "url:",
+      "o": null,
+      "r": null,
+      "h": null
+    }
   },
   {
     "id": "linkedin",
     "name": "LinkedIn",
     "url_template": "https://www.linkedin.com/search/results/content/?keywords={dork}",
-    "syntax_guide": "Limited search syntax. Use keywords for people, companies, jobs, or content search."
+    "syntax_guide": "Basic keyword search — Google relay (site:linkedin.com) recommended for advanced queries.",
+    "relay": "google",
+    "operators": {
+      "scope": [],
+      "content": [],
+      "metadata": [],
+      "date": []
+    },
+    "target_types": {
+      "d": null,
+      "o": null,
+      "r": null,
+      "h": null
+    }
   },
   {
     "id": "pastebin",
     "name": "Pastebin",
     "url_template": "https://pastebin.com/search?q={dork}",
-    "syntax_guide": "Basic keyword search. Use for finding leaked credentials and code snippets."
+    "syntax_guide": "Basic keyword search — Google relay (site:pastebin.com) recommended for advanced queries.",
+    "relay": "google",
+    "operators": {
+      "scope": [],
+      "content": [],
+      "metadata": [],
+      "date": []
+    },
+    "target_types": {
+      "d": null,
+      "o": null,
+      "r": null,
+      "h": null
+    }
   },
   {
     "id": "virustotal",
     "name": "VirusTotal",
     "url_template": "https://www.virustotal.com/gui/search/{dork}",
-    "syntax_guide": "Use VT search syntax: entity:url, entity:domain, engine:, tag:, p:+"
+    "syntax_guide": "entity:url | entity:domain | entity:ip | engine: | tag: | p:+",
+    "relay": null,
+    "operators": {
+      "scope": [],
+      "content": ["entity:"],
+      "metadata": ["engine:", "tag:"],
+      "date": []
+    },
+    "target_types": {
+      "d": null,
+      "o": null,
+      "r": null,
+      "h": null
+    }
   },
   {
     "id": "urlscan",
     "name": "URLscan",
     "url_template": "https://urlscan.io/search/#{dork}",
-    "syntax_guide": "Use URLscan syntax: domain:, ip:, asn:, server:, page.domain:, page.mime:"
+    "syntax_guide": "domain: | ip: | asn: | server: | page.domain: | page.mime:",
+    "relay": null,
+    "operators": {
+      "scope": ["domain:", "ip:"],
+      "content": [],
+      "metadata": ["asn:", "server:", "page.domain:", "page.mime:"],
+      "date": []
+    },
+    "target_types": {
+      "d": "domain:",
+      "o": null,
+      "r": null,
+      "h": "ip:"
+    }
   },
   {
     "id": "fofa",
     "name": "FOFA",
     "url_template": "https://en.fofa.info/result?qbase64={dork}",
-    "syntax_guide": "Use FOFA syntax: title=\"\", body=\"\", server=\"\", protocol=\"\", port=\"\", host=\"\", country=\"CN\""
+    "syntax_guide": "title=\"...\" | body=\"...\" | server=\"...\" | protocol=\"...\" | port=\"...\" | host=\"...\" | country=\"...\"",
+    "relay": null,
+    "operators": {
+      "scope": ["host="],
+      "content": ["title=", "body="],
+      "metadata": ["server=", "protocol=", "port=", "country="],
+      "date": []
+    },
+    "target_types": {
+      "d": "host=",
+      "o": null,
+      "r": null,
+      "h": "host="
+    }
   },
   {
     "id": "grep_app",
     "name": "grep.app",
     "url_template": "https://grep.app/search?q={dork}",
-    "syntax_guide": "Code search across public repos. Use regex patterns and plain text search."
+    "syntax_guide": "Code search across public repos. Repo scoping via URL path: grep.app/{org}/{repo}?q=...",
+    "relay": null,
+    "operators": {
+      "scope": [],
+      "content": [],
+      "metadata": [],
+      "date": []
+    },
+    "target_types": {
+      "d": null,
+      "o": null,
+      "r": null,
+      "h": null
+    }
   },
   {
     "id": "publicwww",
     "name": "PublicWWW",
     "url_template": "https://publicwww.com/source/{dork}",
-    "syntax_guide": "Source code search engine. Use any string or regex to find code snippets."
+    "syntax_guide": "Source code search. Use any string or regex to find code snippets. No native scope operators.",
+    "relay": null,
+    "operators": {
+      "scope": [],
+      "content": [],
+      "metadata": [],
+      "date": []
+    },
+    "target_types": {
+      "d": null,
+      "o": null,
+      "r": null,
+      "h": null
+    }
   }
 ]
