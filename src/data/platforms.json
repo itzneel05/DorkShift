@@ -1,0 +1,74 @@
+[
+  {
+    "id": "google",
+    "name": "Google",
+    "url_template": "https://www.google.com/search?q={dork}",
+    "syntax_guide": "Use standard Google search operators: site:, inurl:, intitle:, filetype:, \"exact phrase\", | (OR), - (exclude)"
+  },
+  {
+    "id": "github",
+    "name": "GitHub",
+    "url_template": "https://github.com/search?q={dork}&type=code",
+    "syntax_guide": "Use GitHub code search syntax: repo:, user:, language:, path:, extension:, \"exact string\""
+  },
+  {
+    "id": "shodan",
+    "name": "Shodan",
+    "url_template": "https://www.shodan.io/search?query={dork}",
+    "syntax_guide": "Use Shodan filters: port:, country:, city:, org:, os:, hostname:, product:, vuln:"
+  },
+  {
+    "id": "censys",
+    "name": "Censys",
+    "url_template": "https://search.censys.io/search?resource=hosts&q={dork}",
+    "syntax_guide": "Use Censys search syntax: services.service_name:, location.country:, services.port:, labels:"
+  },
+  {
+    "id": "x_twitter",
+    "name": "X / Twitter",
+    "url_template": "https://x.com/search?q={dork}&src=typed_query",
+    "syntax_guide": "Use X search operators: from:, to:, url:, lang:, min_replies:, has:media, has:links"
+  },
+  {
+    "id": "linkedin",
+    "name": "LinkedIn",
+    "url_template": "https://www.linkedin.com/search/results/content/?keywords={dork}",
+    "syntax_guide": "Limited search syntax. Use keywords for people, companies, jobs, or content search."
+  },
+  {
+    "id": "pastebin",
+    "name": "Pastebin",
+    "url_template": "https://pastebin.com/search?q={dork}",
+    "syntax_guide": "Basic keyword search. Use for finding leaked credentials and code snippets."
+  },
+  {
+    "id": "virustotal",
+    "name": "VirusTotal",
+    "url_template": "https://www.virustotal.com/gui/search/{dork}",
+    "syntax_guide": "Use VT search syntax: entity:url, entity:domain, engine:, tag:, p:+"
+  },
+  {
+    "id": "urlscan",
+    "name": "URLscan",
+    "url_template": "https://urlscan.io/search/#{dork}",
+    "syntax_guide": "Use URLscan syntax: domain:, ip:, asn:, server:, page.domain:, page.mime:"
+  },
+  {
+    "id": "fofa",
+    "name": "FOFA",
+    "url_template": "https://en.fofa.info/result?qbase64={dork}",
+    "syntax_guide": "Use FOFA syntax: title=\"\", body=\"\", server=\"\", protocol=\"\", port=\"\", host=\"\", country=\"CN\""
+  },
+  {
+    "id": "grep_app",
+    "name": "grep.app",
+    "url_template": "https://grep.app/search?q={dork}",
+    "syntax_guide": "Code search across public repos. Use regex patterns and plain text search."
+  },
+  {
+    "id": "publicwww",
+    "name": "PublicWWW",
+    "url_template": "https://publicwww.com/source/{dork}",
+    "syntax_guide": "Source code search engine. Use any string or regex to find code snippets."
+  }
+]

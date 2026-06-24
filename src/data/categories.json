@@ -1,0 +1,242 @@
+[
+  {
+    "id": "db_credentials",
+    "name": "DB Credentials",
+    "description": "Database connection strings, passwords, and credentials for various database systems",
+    "example_dorks": ["DB_PASSWORD=root123", "postgresql://user:pass@host/db", "mysql_connection_string"],
+    "keywords": ["db_password", "database_password", "db_pass", "DATABASE_PASSWD", "db_username", "mysql_password", "postgres_password", "mongo_uri", "mongodb+srv", "connection_string", "jdbc_url", "DATABASE_URL", "DB_HOST", "DB_PORT"],
+    "severity": "critical"
+  },
+  {
+    "id": "aws_credentials",
+    "name": "AWS Credentials",
+    "description": "Amazon Web Services access keys, secret keys, and session tokens",
+    "example_dorks": ["AKIAIOSFODNN7EXAMPLE", "aws_access_key_id", "AWS_SECRET_ACCESS_KEY"],
+    "keywords": ["aws_access_key", "aws_secret_key", "aws_access_key_id", "AWS_SECRET_ACCESS_KEY", "AWS_SESSION_TOKEN", "AKIA", "aws_secret_access_key", "aws_key", "amazon_aws", "aws_credentials", "AWS_ACCESS_KEY", "AWS_SECRET_KEY"],
+    "severity": "critical"
+  },
+  {
+    "id": "api_keys_generic",
+    "name": "API Keys (Generic)",
+    "description": "Generic API keys, tokens, and access credentials for various third-party services",
+    "example_dorks": ["api_key=sk_live_abc123", "API_TOKEN=xyz789", "apikey=abcdef"],
+    "keywords": ["api_key", "api_secret", "api_token", "API_KEY", "API_TOKEN", "API_SECRET", "api_key_public", "api_key_private", "app_token", "access_token", "auth_token", "application_key"],
+    "severity": "high"
+  },
+  {
+    "id": "jwt_secrets",
+    "name": "JWT Secrets",
+    "description": "JSON Web Token signing secrets, private keys, and JWKS key sets",
+    "example_dorks": ["JWT_SECRET=mysecretkey", "jwt_signing_key", "eyJhbGciOiJI...", "json_web_token"],
+    "keywords": ["jwt_secret", "JWT_SECRET", "jwt_signing_key", "json_web_token", "jwt_private_key", "jwt_token", "JWT_KEY", "jwt_secret_key", "jwt_public_key", "JWKS", "json_web_key"],
+    "severity": "critical"
+  },
+  {
+    "id": "ssh_keys",
+    "name": "SSH Keys",
+    "description": "SSH private keys, authorized_keys, id_rsa, and other cryptographic key material",
+    "example_dorks": ["-----BEGIN OPENSSH PRIVATE KEY-----", "id_rsa", "ssh-rsa AAAAB3NzaC1yc2..."],
+    "keywords": ["ssh_key", "id_rsa", "id_dsa", "id_ecdsa", "id_ed25519", "authorized_keys", "ssh_private_key", "SSH_PRIVATE_KEY", "ssh_private_key_file", "ssh_key_pair", "BEGIN OPENSSH PRIVATE KEY", "BEGIN RSA PRIVATE KEY", "BEGIN DSA PRIVATE KEY", "BEGIN EC PRIVATE KEY"],
+    "severity": "critical"
+  },
+  {
+    "id": "oauth_tokens",
+    "name": "OAuth Tokens",
+    "description": "OAuth client IDs, client secrets, refresh tokens, and authorization codes",
+    "example_dorks": ["oauth_client_id=12345", "client_secret=abcdef", "refresh_token=xyz"],
+    "keywords": ["oauth_token", "oauth_client_id", "client_secret", "oauth_secret", "OAuth_Consumer_Key", "OAuth_Consumer_Secret", "oauth_access_token", "oauth_refresh_token", "client_id", "clientId", "CLIENT_SECRET", "OAUTH_CLIENT_SECRET"],
+    "severity": "high"
+  },
+  {
+    "id": "stripe_keys",
+    "name": "Stripe Keys",
+    "description": "Stripe API keys including publishable, secret, and restricted keys",
+    "example_dorks": ["sk_live_abc123def456", "pk_live_xyz789", "STRIPE_SECRET_KEY"],
+    "keywords": ["stripe_key", "stripe_secret", "STRIPE_KEY", "STRIPE_SECRET", "stripe_api_key", "sk_live", "pk_live", "sk_test", "pk_test", "stripe_public_key", "stripe_private_key", "stripe_webhook_secret", "STRIPE_PUBLISHABLE_KEY", "STRIPE_SECRET_KEY"],
+    "severity": "critical"
+  },
+  {
+    "id": "github_tokens",
+    "name": "GitHub Tokens",
+    "description": "GitHub personal access tokens, OAuth apps tokens, and deployment keys",
+    "example_dorks": ["ghp_abcdefghijklmnop", "github_pat_abc123", "GITHUB_TOKEN"],
+    "keywords": ["github_token", "GITHUB_TOKEN", "github_pat", "GITHUB_PAT", "ghp_", "github_access_token", "github_oauth", "github_key", "GH_TOKEN", "github_deploy_key", "personal_access_token"],
+    "severity": "high"
+  },
+  {
+    "id": "firebase_config",
+    "name": "Firebase Config",
+    "description": "Firebase project configuration, service account keys, and API keys",
+    "example_dorks": ["firebase.initializeApp({apiKey:...})", "FIREBASE_API_KEY", "firebase_config"],
+    "keywords": ["firebase_api_key", "firebase_config", "FIREBASE_API_KEY", "firebase_auth_domain", "firebase_database_url", "firebase_project_id", "firebase_storage_bucket", "firebase_messaging_sender_id", "firebase_app_id", "firebase_measurement_id", "firebase_service_account", "firebase_private_key", "FIREBASE_CONFIG", "GOOGLE_APPLICATION_CREDENTIALS"],
+    "severity": "high"
+  },
+  {
+    "id": "smtp_credentials",
+    "name": "SMTP Credentials",
+    "description": "Email server credentials, SMTP host/user/pass, and mail server configurations",
+    "example_dorks": ["smtp_user=admin@example.com", "SMTP_PASSWORD=pass123", "mail_server_credentials"],
+    "keywords": ["smtp_user", "smtp_password", "SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASS", "smtp_username", "mail_username", "mail_password", "email_credentials", "smtp_credentials", "mail_server", "MAIL_HOST", "MAIL_USERNAME", "MAIL_PASSWORD"],
+    "severity": "high"
+  },
+  {
+    "id": "gcp_credentials",
+    "name": "GCP Credentials",
+    "description": "Google Cloud Platform service account keys, JSON credentials, and access tokens",
+    "example_dorks": ["type: service_account", "GOOGLE_CLOUD_KEY", "gcp_credentials.json"],
+    "keywords": ["gcp_credentials", "google_cloud", "GOOGLE_CLOUD_KEY", "gcp_service_account", "google_application_credentials", "GCP_KEY", "gcp_secret", "google_cloud_platform", "gcp_auth", "gcp_access_key", "gcp_secret_key", "GCP_PROJECT", "GCP_PRIVATE_KEY"],
+    "severity": "critical"
+  },
+  {
+    "id": "azure_credentials",
+    "name": "Azure Credentials",
+    "description": "Azure subscription keys, connection strings, and service principal credentials",
+    "example_dorks": ["AZURE_SUBSCRIPTION_KEY", "azure_connection_string", "DefaultEndpointsProtocol=https"],
+    "keywords": ["azure_key", "AZURE_KEY", "azure_secret", "azure_connection_string", "AZURE_SUBSCRIPTION_KEY", "azure_storage_key", "azure_access_key", "azure_credentials", "azure_tenant", "azure_client_id", "azure_client_secret", "AZURE_CLIENT_ID", "AZURE_CLIENT_SECRET", "AZURE_TENANT_ID"],
+    "severity": "critical"
+  },
+  {
+    "id": "slack_tokens",
+    "name": "Slack Tokens",
+    "description": "Slack API tokens, webhook URLs, bot tokens, and workspace access credentials",
+    "example_dorks": ["xoxb-1234567890-abc", "SLACK_BOT_TOKEN", "hooks.slack.com/services/"],
+    "keywords": ["slack_token", "SLACK_TOKEN", "xoxb", "xoxa", "xoxp", "xoxs", "slack_bot_token", "SLACK_BOT_TOKEN", "slack_webhook", "slack_api_token", "slack_access_token", "slack_signing_secret", "SLACK_SIGNING_SECRET"],
+    "severity": "high"
+  },
+  {
+    "id": "discord_tokens",
+    "name": "Discord Tokens",
+    "description": "Discord bot tokens, webhook URLs, and user authentication tokens",
+    "example_dorks": ["discord.com/api/webhooks/", "NDc2NTc0MjE5MDkyMDQ3", "DISCORD_BOT_TOKEN"],
+    "keywords": ["discord_token", "DISCORD_TOKEN", "discord_bot_token", "DISCORD_BOT_TOKEN", "discord_webhook", "discord_api_key", "discord_client_secret", "discord_public_key", "discord_app_token"],
+    "severity": "high"
+  },
+  {
+    "id": "twilio_credentials",
+    "name": "Twilio Credentials",
+    "description": "Twilio account SID, auth tokens, and API key credentials",
+    "example_dorks": ["TWILIO_ACCOUNT_SID=ACabc", "TWILIO_AUTH_TOKEN=xyz", "twilio_number"],
+    "keywords": ["twilio_sid", "twilio_token", "TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "twilio_auth", "twilio_api_key", "twilio_secret", "twilio_credentials", "TWILIO_API_KEY", "TWILIO_API_SECRET", "TWILIO_SERVICE_SID"],
+    "severity": "high"
+  },
+  {
+    "id": "sendgrid_keys",
+    "name": "SendGrid Keys",
+    "description": "SendGrid API keys, SMTP credentials, and email service access tokens",
+    "example_dorks": ["SG.abc123def456", "SENDGRID_API_KEY", "sendgrid_username"],
+    "keywords": ["sendgrid_key", "SENDGRID_KEY", "sendgrid_api_key", "SENDGRID_API_KEY", "sendgrid_password", "sendgrid_username", "sendgrid_credentials", "SG.", "sendgrid_token", "sendgrid_from_email"],
+    "severity": "high"
+  },
+  {
+    "id": "heroku_keys",
+    "name": "Heroku Keys",
+    "description": "Heroku API keys, deployment tokens, and application config variables",
+    "example_dorks": ["HEROKU_API_KEY=abc123", "heroku_api_key", "heroku_auth_token"],
+    "keywords": ["heroku_api_key", "HEROKU_API_KEY", "heroku_token", "heroku_auth", "heroku_credentials", "heroku_secret", "HEROKU_APP_NAME", "heroku_postgres", "heroku_redis", "heroku_config"],
+    "severity": "high"
+  },
+  {
+    "id": "docker_credentials",
+    "name": "Docker Credentials",
+    "description": "Docker registry credentials, Docker Hub tokens, and container registry access",
+    "example_dorks": ["docker_password", "DOCKER_REGISTRY_PASS", "docker_config.json"],
+    "keywords": ["docker_password", "DOCKER_PASSWORD", "docker_hub", "docker_registry", "docker_credentials", "DOCKER_REGISTRY", "docker_auth", "docker_config", "DOCKER_EMAIL", "DOCKER_USERNAME", "docker_login", "registry_credentials"],
+    "severity": "high"
+  },
+  {
+    "id": "ftp_credentials",
+    "name": "FTP Credentials",
+    "description": "File Transfer Protocol usernames, passwords, and server addresses",
+    "example_dorks": ["ftp://user:pass@host", "FTP_PASSWORD=abc123", "ftp_username"],
+    "keywords": ["ftp_username", "ftp_password", "FTP_USER", "FTP_PASS", "ftp_host", "ftp_server", "ftp_credentials", "ftp_login", "sftp_username", "sftp_password", "SFTP_USER", "SFTP_PASS", "sftp_host"],
+    "severity": "high"
+  },
+  {
+    "id": "rdp_exposed",
+    "name": "RDP Exposed",
+    "description": "Remote Desktop Protocol connection strings, exposed RDP servers, and credentials",
+    "example_dorks": ["rdp://user:pass@ip", "RDP_SERVER", "remote_desktop_credentials"],
+    "keywords": ["rdp_password", "RDP_PASSWORD", "rdp_server", "rdp_username", "mstsc", "remote_desktop", "RDP_HOST", "RDP_USER", "RDP_PORT", "rdp_credentials", "windows_remote", "terminal_services"],
+    "severity": "high"
+  },
+  {
+    "id": "admin_panels",
+    "name": "Admin Panels",
+    "description": "Admin login pages, dashboard URLs, and administrative interfaces",
+    "example_dorks": ["admin_login", "administrator", "wp-admin", "dashboard", "inurl:admin"],
+    "keywords": ["admin_panel", "admin_login", "admin_url", "administrator", "wp-admin", "dashboard", "admin_area", "cms_admin", "admin_portal", "backend_login", "admin_console"],
+    "severity": "medium"
+  },
+  {
+    "id": "open_directories",
+    "name": "Open Directories",
+    "description": "Directory listing enabled on web servers exposing files and folders",
+    "example_dorks": ["index of /", "directory listing", "parent directory", "intitle:index.of"],
+    "keywords": ["index_of", "directory_listing", "open_directory", "dir_listing", "folder_listing", "parent_directory", "autoindex", "mod_autoindex", "\"Index of /\"", "\"Parent Directory\""],
+    "severity": "medium"
+  },
+  {
+    "id": "backup_files",
+    "name": "Backup Files",
+    "description": "Database dumps, backup archives (.sql, .bak, .tar.gz), and configuration backups",
+    "example_dorks": ["backup.sql", "dump.rdb", "backup.tar.gz", "db_backup", "filetype:sql dump"],
+    "keywords": ["backup", ".bak", ".sql", "dump", "backup_file", "db_dump", "database_backup", ".tar.gz", ".tgz", "backup_zip", "backup_7z", "backup_rar", "_backup", "-backup", "backup-"],
+    "severity": "high"
+  },
+  {
+    "id": "log_files",
+    "name": "Log Files",
+    "description": "Application logs, error logs, access logs, and debugging output containing sensitive data",
+    "example_dorks": ["error_log", "access.log", "debug.log", "application.log", "filetype:log"],
+    "keywords": ["error_log", "access_log", "debug_log", "application_log", ".log", "syslog", "messages_log", "auth_log", "apache_log", "nginx_log", "server_log", "cron_log", "mail_log", "php_error", "laravel_log", "rails_log"],
+    "severity": "medium"
+  },
+  {
+    "id": "config_files",
+    "name": "Config Files",
+    "description": "Configuration files (.env, .config, .ini, .yml, .xml) containing credentials and settings",
+    "example_dorks": [".env", "config.php", "database.yml", "appsettings.json", "wp-config.php"],
+    "keywords": [".env", "config.php", "config.js", "config.json", "config.yml", "config.yaml", "config.xml", "config.ini", "appsettings.json", "database.yml", "wp-config.php", "settings.py", "settings.json", "application.properties", "web.config", "configuration_file"],
+    "severity": "high"
+  },
+  {
+    "id": "api_endpoints",
+    "name": "API Endpoints",
+    "description": "REST API endpoints, GraphQL interfaces, and undocumented API paths",
+    "example_dorks": ["/api/v1/users", "graphql", "swagger.json", "api/docs", "inurl:api"],
+    "keywords": ["api_endpoint", "/api/", "/v1/", "/v2/", "graphql", "swagger", "openapi", "api_docs", "rest_api", "api_route", "endpoint", "api/v1", "api/v2", "api/v3"],
+    "severity": "medium"
+  },
+  {
+    "id": "wordpress_config",
+    "name": "WordPress Config",
+    "description": "WordPress configuration files, database credentials, and authentication keys",
+    "example_dorks": ["wp-config.php", "DB_PASSWORD in wp-config", "AUTH_KEY", "wp-config-sample.php"],
+    "keywords": ["wp-config", "DB_PASSWORD", "AUTH_KEY", "SECURE_AUTH_KEY", "LOGGED_IN_KEY", "NONCE_KEY", "AUTH_SALT", "SECURE_AUTH_SALT", "LOGGED_IN_SALT", "NONCE_SALT", "wp_user", "wp_password", "wordpress_db", "table_prefix"],
+    "severity": "high"
+  },
+  {
+    "id": "jenkins_exposed",
+    "name": "Jenkins Exposed",
+    "description": "Jenkins CI/CD instances with exposed configuration, credentials, and job details",
+    "example_dorks": ["jenkins/login", "jenkins/credentials", "jenkins/script", "Jenkins.instance"],
+    "keywords": ["jenkins_url", "JENKINS_URL", "jenkins_user", "jenkins_password", "JENKINS_USER", "JENKINS_PASS", "jenkins_token", "JENKINS_TOKEN", "jenkins_api", "jenkins_job", "jenkins_credentials", "jenkins_ssh", "hudson", "jenkins_secret"],
+    "severity": "high"
+  },
+  {
+    "id": "elasticsearch_exposed",
+    "name": "Elasticsearch Exposed",
+    "description": "Exposed Elasticsearch instances, unprotected indices, and data leaks",
+    "example_dorks": ["elasticsearch:9200", "elasticsearch_host", "ES_CLUSTER", "inurl:9200/_cat"],
+    "keywords": ["elasticsearch", "elastic_search", "ES_HOST", "ES_PORT", "es_host", "es_port", "elastic_url", "ELASTICSEARCH_URL", "elasticsearch_host", "elasticsearch_port", "searchguard", "elastic_password", "ELASTIC_PASSWORD"],
+    "severity": "high"
+  },
+  {
+    "id": "ssl_certs",
+    "name": "SSL Certs",
+    "description": "SSL/TLS certificates, private keys, certificate signing requests, and PEM files",
+    "example_dorks": ["-----BEGIN CERTIFICATE-----", "ssl_certificate", "server.crt", "server.key"],
+    "keywords": ["ssl_cert", "ssl_key", "SSL_CERT", "SSL_KEY", "ssl_certificate", "ssl_private_key", "server.crt", "server.key", "fullchain.pem", "privkey.pem", "cert.pem", "key.pem", "BEGIN CERTIFICATE", "BEGIN PRIVATE KEY", "BEGIN RSA PRIVATE KEY", "tls_cert", "tls_key"],
+    "severity": "critical"
+  }
+]

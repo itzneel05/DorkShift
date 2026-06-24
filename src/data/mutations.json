@@ -1,0 +1,45 @@
+[
+  {
+    "id": "case_mutation",
+    "name": "Case Mutation",
+    "description": "Generates case variants — lowercase, UPPERCASE, Capitalized, cAmElCaSe, and mixed-case versions of every keyword and dork component",
+    "enabled_by_default": true,
+    "config_schema": {}
+  },
+  {
+    "id": "separator_mutation",
+    "name": "Separator Mutation",
+    "description": "Replaces separators between words — underscore, hyphen, dot, colon, slash, and no-separator variants (e.g. db_password, db-password, db.password, dbpass)",
+    "enabled_by_default": true,
+    "config_schema": {
+      "separators": ["_", "-", ".", "", ":", "/"]
+    }
+  },
+  {
+    "id": "synonym_expansion",
+    "name": "Synonym Expansion",
+    "description": "Expands keywords into semantic equivalents — password → pass, passwd, pwd, secret, credentials, key. Expands db → database, DATABASE. Expands config → configuration, settings, setup",
+    "enabled_by_default": true,
+    "config_schema": {
+      "max_variants": 50
+    }
+  },
+  {
+    "id": "framework_specific",
+    "name": "Framework-Specific",
+    "description": "Generates dorks targeting known patterns in popular frameworks — Django SECRET_KEY, Rails secret_key_base, Flask SECRET_KEY, Laravel APP_KEY, Spring Boot, Express, and more",
+    "enabled_by_default": true,
+    "config_schema": {
+      "frameworks": ["django", "rails", "flask", "laravel", "spring", "express", "gin", "fastapi", "aspnet", "nextjs"]
+    }
+  },
+  {
+    "id": "file_extension",
+    "name": "File Extension",
+    "description": "Generates dork variants targeting specific file types — .env, .config, .json, .yml, .xml, .ini, .sql, .log, .bak, .pem, .key, .cert, .credentials, .secret",
+    "enabled_by_default": true,
+    "config_schema": {
+      "extensions": [".env", ".config", ".json", ".yml", ".yaml", ".xml", ".ini", ".sql", ".log", ".bak", ".pem", ".key", ".cert", ".credentials", ".secret", ".txt", ".cfg", ".conf"]
+    }
+  }
+]

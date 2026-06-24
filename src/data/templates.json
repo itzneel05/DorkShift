@@ -1,0 +1,102 @@
+[
+  {
+    "id": "aws_credentials_hunt",
+    "name": "AWS Credential Hunt",
+    "description": "Hunt for leaked AWS access keys across GitHub, Pastebin, and PublicWWW",
+    "config": {
+      "category": "aws_credentials",
+      "platforms": ["github", "pastebin", "publicwww", "grep_app", "google"],
+      "mutations": ["case_mutation", "separator_mutation", "synonym_expansion", "file_extension"]
+    }
+  },
+  {
+    "id": "database_credential_leak",
+    "name": "Database Credential Leak",
+    "description": "Search for exposed database credentials across all platforms",
+    "config": {
+      "category": "db_credentials",
+      "platforms": ["github", "pastebin", "google", "urlscan", "publicwww", "fofa"],
+      "mutations": ["case_mutation", "separator_mutation", "synonym_expansion", "framework_specific", "file_extension"]
+    }
+  },
+  {
+    "id": "ssh_key_exposure",
+    "name": "SSH Key Exposure",
+    "description": "Find exposed SSH private keys and cryptographic material",
+    "config": {
+      "category": "ssh_keys",
+      "platforms": ["github", "pastebin", "grep_app", "publicwww", "google"],
+      "mutations": ["file_extension"]
+    }
+  },
+  {
+    "id": "api_key_generic_scan",
+    "name": "Generic API Key Scan",
+    "description": "Broad scan for any exposed API keys and tokens across code repositories",
+    "config": {
+      "category": "api_keys_generic",
+      "platforms": ["github", "grep_app", "publicwww", "pastebin", "urlscan"],
+      "mutations": ["case_mutation", "separator_mutation", "synonym_expansion"]
+    }
+  },
+  {
+    "id": "admin_panel_discovery",
+    "name": "Admin Panel Discovery",
+    "description": "Discover exposed admin panels and backend dashboards via Google dorks",
+    "config": {
+      "category": "admin_panels",
+      "platforms": ["google", "fofa", "censys", "shodan"],
+      "mutations": ["separator_mutation"]
+    }
+  },
+  {
+    "id": "config_file_exposure",
+    "name": "Config File Exposure",
+    "description": "Find exposed .env and configuration files containing secrets",
+    "config": {
+      "category": "config_files",
+      "platforms": ["github", "pastebin", "publicwww", "grep_app", "google"],
+      "mutations": ["file_extension", "separator_mutation"]
+    }
+  },
+  {
+    "id": "cloud_credentials_mega",
+    "name": "Cloud Credentials Mega Hunt",
+    "description": "Simultaneous hunt across AWS, GCP, and Azure credentials",
+    "config": {
+      "category": "db_credentials",
+      "platforms": ["github", "pastebin", "google", "publicwww", "grep_app", "urlscan", "shodan", "fofa"],
+      "mutations": ["case_mutation", "separator_mutation", "synonym_expansion", "file_extension"]
+    }
+  },
+  {
+    "id": "continuous_integration_leaks",
+    "name": "CI/CD Pipeline Leaks",
+    "description": "Find Jenkins, GitHub Actions, and CI/CD pipeline secrets",
+    "config": {
+      "category": "jenkins_exposed",
+      "platforms": ["google", "github", "shodan", "fofa", "censys"],
+      "mutations": ["case_mutation", "separator_mutation", "synonym_expansion"]
+    }
+  },
+  {
+    "id": "open_directory_hunt",
+    "name": "Open Directory & Backup Hunt",
+    "description": "Locate open directory listings and accessible backup files",
+    "config": {
+      "category": "open_directories",
+      "platforms": ["google", "fofa", "publicwww"],
+      "mutations": ["file_extension"]
+    }
+  },
+  {
+    "id": "full_spectrum_scan",
+    "name": "Full Spectrum Scan",
+    "description": "Maximum coverage — all categories, all platforms, all mutations enabled",
+    "config": {
+      "category": "api_keys_generic",
+      "platforms": ["google", "github", "shodan", "censys", "x_twitter", "linkedin", "pastebin", "virustotal", "urlscan", "fofa", "grep_app", "publicwww"],
+      "mutations": ["case_mutation", "separator_mutation", "synonym_expansion", "framework_specific", "file_extension"]
+    }
+  }
+]
