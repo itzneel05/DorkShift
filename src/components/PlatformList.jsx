@@ -13,6 +13,29 @@ const PLATFORM_DOMAINS = {
   publicwww: ['code', 'script', 'analytics'],
 }
 
+function formatOperator(op, value) {
+  if (op.endsWith('=')) return op + '"' + value + '"'
+  return op + value
+}
+
+function getOperatorText(platformData, allPlatforms, targetType, targetValue) {
+  if (!targetType || !targetValue) return null
+
+  const nativeOp = platformData.target_types[targetType]
+  if (nativeOp) return { text: formatOperator(nativeOp, targetValue), color: 'text-accent' }
+
+  if (platformData.relay) {
+    const relayPlatform = allPlatforms.find(p => p.id === platformData.relay)
+    if (relayPlatform) {
+      const relayOp = relayPlatform.target_types[targetType]
+      if (relayOp) return { text: formatOperator(relayOp, targetValue), color: 'text-warning' }
+    }
+    return { text: '(relay — bare)', color: 'text-warning' }
+  }
+
+  return { text: '(bare)', color: 'text-muted' }
+}
+
 function getOperatorMarker(platformData, targetType) {
   if (!targetType) return null
 
@@ -48,6 +71,7 @@ function getOpacity(relevance) {
 
 function PlatformList({ platforms, activePlatformIds, onPlatformToggle, targetState, selectedCategoryId, categories }) {
   const targetType = targetState && targetState.type ? targetState.type : null
+  const targetValue = targetState && targetState.value ? targetState.value : null
   const selectedCategory = categories?.find(c => c.id === selectedCategoryId) || null
 
   return (
@@ -61,6 +85,7 @@ function PlatformList({ platforms, activePlatformIds, onPlatformToggle, targetSt
           const marker = getOperatorMarker(p, targetType)
           const relevance = computeRelevance(selectedCategory, p.id)
           const opacityClass = getOpacity(relevance)
+          const opText = getOperatorText(p, platforms, targetType, targetValue)
           return (
             <label
               key={p.id}
@@ -79,7 +104,13 @@ function PlatformList({ platforms, activePlatformIds, onPlatformToggle, targetSt
                   {marker.symbol}
                 </span>
               )}
-              {p.name}
+              {!marker && opText && <span className="w-3 shrink-0" />}
+              <span className="truncate">{p.name}</span>
+              {opText && (
+                <span className={`ml-auto text-[10px] font-mono shrink-0 ${opText.color}`}>
+                  {opText.text}
+                </span>
+              )}
             </label>
           )
         })}
