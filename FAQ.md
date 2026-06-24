@@ -1,4 +1,3 @@
-
 ## Frequently Asked Questions
 
 **Q: Does DorkShift actually search the platforms?**

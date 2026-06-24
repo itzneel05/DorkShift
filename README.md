@@ -1,9 +1,9 @@
 
 # DorkShift — Semantic Dork Mutation Engine
 
-**One input → 20–80 ready-to-use dorks, translated into correct syntax for 12 platforms simultaneously.**
+**One input → 20–80 ready-to-use search queries, translated into correct syntax for 12 platforms simultaneously.**
 
-DorkShift is a client-side single-page web application. It takes a seed dork or a secret category and generates a complete mutation pack — all semantic variants of that dork, each translated into the correct search syntax for 12 platforms. It understands semantic intent, not just syntax: `DB_PASSWORD`, `database_password`, `db_pass`, `DbPassword`, and `DATABASE_PASSWD` are all recognised as the same secret class, and DorkShift generates variants for all of them.
+DorkShift is a client-side single-page web application for security research, exposure discovery, and asset visibility. It takes a seed dork or a category of interest and generates a complete mutation pack — all semantic variants of that search term, each translated into the correct search syntax for 12 platforms. It understands semantic intent, not just syntax: `DB_PASSWORD`, `database_password`, `db_pass`, `DbPassword`, and `DATABASE_PASSWD` are all recognised as the same semantic class, and DorkShift generates variants for all of them.
 
 No backend. No database. No API calls. Everything runs in the browser. No installation required — it's a ready-to-use website hosted on GitHub Pages.
 
@@ -12,11 +12,11 @@ No backend. No database. No API calls. Everything runs in the browser. No instal
 - **Semantic vocabulary expansion** — single keyword → dozens of semantically equivalent variants
 - **5 mutation strategies** — case, separator, synonym, framework-specific, file extension
 - **12 platform translations** — Google, GitHub, Shodan, Censys, X/Twitter, LinkedIn, Pastebin, VirusTotal, URLscan, FOFA, grep.app, PublicWWW
-- **30 secret categories** — from DB credentials to SSL certs, each with curated keyword sets
+- **30 detection categories** — from database credentials to SSL certificates, each with curated keyword sets
 - **Target injection** — prefix `d:example.com`, `o:acme`, `r:user/repo`, or `h:10.0.0.0/8` to get correct native operators injected per platform
-- **Auto-classifier** — debounced intent detection suggests the correct category as you type
+- **Auto-classifier** — debounced intent detection suggests the relevant category as you type
 - **10 pre-built templates** — one-click load category + platform + mutation configs
-- **One-click launch URLs** — every dork opens its pre-built search URL in a new tab
+- **One-click launch URLs** — every query opens its pre-built search URL in a new tab
 - **Copy-all & export** — copy per-platform lists or download as .txt
 - **Shareable URLs** — full state encoded into a URL parameter
 - **Explicit RUN trigger** — compute on demand, not on every keystroke
@@ -29,7 +29,19 @@ No installation needed. Open the site in your browser:
 https://itzneel05.github.io/DorkShift/
 ```
 
-Start by typing a seed dork, selecting a category, and clicking RUN.
+Start by typing a search term, selecting a category, and clicking RUN.
+
+## Responsible Use
+
+DorkShift is intended for authorised security research, defensive auditing, OSINT investigation, bug bounty programs, CTF learning environments, and exposure validation. Users are responsible for complying with applicable laws, platform terms of service, and authorisation requirements.
+
+DorkShift does not:
+- Scan, crawl, or probe any system
+- Validate or exploit discovered credentials
+- Collect or exfiltrate data
+- Send network requests during query generation
+
+The only network action is opening a pre-built search URL in a new tab when the user clicks the launch button.
 
 ## Tech Stack
 
@@ -79,11 +91,11 @@ sdme/
 │   │   ├── frameworks.json          # Framework-specific patterns (10 frameworks)
 │   │   └── templates.json           # 10 pre-built template packs
 │   ├── engine/
-│   │   ├── parser.js                # Tokenise raw dork input
+│   │   ├── parser.js                # Tokenise raw search input
 │   │   ├── intentClassifier.js      # Classify input against category keywords
 │   │   ├── vocabularyEngine.js      # Expand keywords into semantic variants
 │   │   ├── mutationEngine.js        # Apply mutation strategies
-│   │   ├── platformTranslator.js    # Translate dorks per-platform + inject targets
+│   │   ├── platformTranslator.js    # Translate queries per-platform + inject targets
 │   │   └── outputFormatter.js       # Shape results for rendering
 │   ├── components/
 │   │   ├── SelectionPane.jsx        # Target input, seed input, classifier banner
@@ -93,12 +105,12 @@ sdme/
 │   │   ├── StrategyStep.jsx         # Toggleable, collapsible strategy row
 │   │   ├── TemplateDropdown.jsx     # Template selector w/ hover preview
 │   │   ├── OutputPane.jsx           # Results browser w/ tabs, sort, summary
-│   │   ├── DorkRow.jsx              # Dork display w/ copy + launch actions
+│   │   ├── DorkRow.jsx              # Query display w/ copy + launch actions
 │   │   └── RunButton.jsx            # RUN / RUNNING trigger
 │   └── utils/
 │       ├── urlBuilder.js            # Build platform search URLs
 │       ├── deduplicator.js          # Deduplication strategies
-│       ├── scorer.js                # Dork relevance scoring
+│       ├── scorer.js                # Query relevance scoring
 │       └── shareUrl.js              # State encode/decode for URL sharing
 ```
 
@@ -107,23 +119,8 @@ sdme/
 - **Flat panels, no shadows** — border-radius 0–4px max
 - **Minimal colour** — ≤10 tokens, reserved for state/meaning
 - **No decorative animation** — transitions ≤150ms, functional only
-- **Monospace-forward** — JetBrains Mono for code, sans for UI chrome
+- **Monospace-forward** — JetBrains Mono for code-like content, sans for UI chrome
 - **3-pane layout** — Selection, Recipe, Output (CyberChef-inspired)
-
-## Documentation
-
-Additional documentation is available as Markdown files in the project root:
-
-| File | Description |
-|------|-------------|
-| [`ARCHITECTURE.md`](./ARCHITECTURE.md) | System design, data flow, and component diagrams |
-| [`WHY.md`](./WHY.md) | Problem statement, audience, and rationale |
-| [`USE_CASES.md`](./USE_CASES.md) | Real-world scenarios and walkthroughs |
-| [`USER_MANUAL.md`](./USER_MANUAL.md) | Step-by-step usage guide |
-| [`FEATURES.md`](./FEATURES.md) | Feature-by-feature breakdown |
-| [`FAQ.md`](./FAQ.md) | Frequently asked questions |
-| [`GLOSSARY.md`](./GLOSSARY.md) | Project-specific terminology |
-| [`CONTRIBUTING.md`](./CONTRIBUTING.md) | How to contribute |
 
 ## License
 

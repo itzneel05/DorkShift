@@ -1,4 +1,3 @@
-
 ## Feature Breakdown
 
 | Feature | What It Does | Why | Status |
