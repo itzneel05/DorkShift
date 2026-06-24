@@ -12,6 +12,7 @@ function SelectionPane({
   onPlatformToggle,
   classifierResult,
   targetState,
+  enabledMutationIds,
 }) {
   const bannerStyle = !classifierResult ? '' :
     classifierResult.confidence >= 0.4
@@ -20,6 +21,13 @@ function SelectionPane({
 
   const tagColor = !targetState || !targetState.type ? 'text-muted' :
     targetState.valid ? 'text-accent' : 'text-warning'
+
+  const selectedCategory = categories.find(c => c.id === selectedCategoryId) || null
+  const estVariants = selectedCategory ? Math.min(50, (selectedCategory.keywords?.length || 5) * 2) : 0
+  const estActiveMutations = enabledMutationIds?.length || 0
+  const estTotal = selectedCategory && activePlatformIds.length > 0 && estActiveMutations > 0
+    ? Math.min(estVariants * estActiveMutations * activePlatformIds.length, 500)
+    : 0
 
   return (
     <div className="p-2 h-full flex flex-col gap-2">
@@ -41,12 +49,22 @@ function SelectionPane({
         </div>
       </div>
 
-      {classifierResult && classifierResult.confidence > 0 && (
-        <div className={`px-2 py-1 text-xs font-sans ${bannerStyle}`}>
-          {classifierResult.confidence >= 0.4
-            ? `Detected: ${classifierResult.category?.name || 'Unknown'} (${Math.round(classifierResult.confidence * 100)}%)`
-            : `Weak match: ${classifierResult.category?.name || 'Unknown'} (${Math.round(classifierResult.confidence * 100)}%) — select manually`
-          }
+      <div className="min-h-[2rem] flex items-center">
+        {classifierResult && classifierResult.confidence > 0 ? (
+          <div className={`w-full px-2 py-1 text-xs font-sans ${bannerStyle}`}>
+            {classifierResult.confidence >= 0.4
+              ? `Detected: ${classifierResult.category?.name || 'Unknown'} (${Math.round(classifierResult.confidence * 100)}%)`
+              : `Weak match: ${classifierResult.category?.name || 'Unknown'} (${Math.round(classifierResult.confidence * 100)}%) — select manually`
+            }
+          </div>
+        ) : (
+          <span className="text-[10px] text-muted font-sans italic">Type a dork to auto-classify...</span>
+        )}
+      </div>
+
+      {estTotal > 0 && (
+        <div className="text-[10px] text-muted font-sans text-right">
+          ~{estTotal} dorks across {activePlatformIds.length} platforms
         </div>
       )}
 
@@ -56,6 +74,7 @@ function SelectionPane({
             categories={categories}
             selectedCategoryId={selectedCategoryId}
             onCategorySelect={onCategorySelect}
+            classifierResult={classifierResult}
           />
         </div>
 
@@ -65,6 +84,8 @@ function SelectionPane({
             activePlatformIds={activePlatformIds}
             onPlatformToggle={onPlatformToggle}
             targetState={targetState}
+            selectedCategoryId={selectedCategoryId}
+            categories={categories}
           />
         </div>
       </div>

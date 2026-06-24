@@ -188,6 +188,7 @@ function App() {
           onPlatformToggle={handlePlatformToggle}
           classifierResult={classifierResult}
           targetState={targetState}
+          enabledMutationIds={enabledMutationIds}
         />
       </div>
 
