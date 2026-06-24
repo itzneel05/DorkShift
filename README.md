@@ -1,16 +1,115 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# DorkShift — Semantic Dork Mutation Engine
 
-Currently, two official plugins are available:
+**One input → 20–80 ready-to-use dorks, translated into correct syntax for 12 platforms simultaneously.**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+DorkShift is a client-side single-page web application. It takes a seed dork or a secret category and generates a complete mutation pack — all semantic variants of that dork, each translated into the correct search syntax for 12 platforms. It understands semantic intent, not just syntax: `DB_PASSWORD`, `database_password`, `db_pass`, `DbPassword`, and `DATABASE_PASSWD` are all recognised as the same secret class, and DorkShift generates variants for all of them.
 
-## React Compiler
+No backend. No database. No API calls. Everything runs in the browser. No installation required — it's a ready-to-use website hosted on GitHub Pages.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Key Features
 
-## Expanding the ESLint configuration
+- **Semantic vocabulary expansion** — single keyword → dozens of semantically equivalent variants
+- **5 mutation strategies** — case, separator, synonym, framework-specific, file extension
+- **12 platform translations** — Google, GitHub, Shodan, Censys, X/Twitter, LinkedIn, Pastebin, VirusTotal, URLscan, FOFA, grep.app, PublicWWW
+- **30 secret categories** — from DB credentials to SSL certs, each with curated keyword sets
+- **Target injection** — prefix `d:example.com`, `o:acme`, `r:user/repo`, or `h:10.0.0.0/8` to get correct native operators injected per platform
+- **Auto-classifier** — debounced intent detection suggests the correct category as you type
+- **10 pre-built templates** — one-click load category + platform + mutation configs
+- **One-click launch URLs** — every dork opens its pre-built search URL in a new tab
+- **Copy-all & export** — copy per-platform lists or download as .txt
+- **Shareable URLs** — full state encoded into a URL parameter
+- **Explicit RUN trigger** — compute on demand, not on every keystroke
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Quick Start (Hosted)
+
+No installation needed. Open the site in your browser:
+
+```
+https://itzneel05.github.io/DorkShift/
+```
+
+Start by typing a seed dork, selecting a category, and clicking RUN.
+
+## Tech Stack
+
+| Layer | Choice |
+|-------|--------|
+| Framework | React + Vite |
+| Styling | Tailwind CSS |
+| Export | FileSaver.js |
+| Hosting | GitHub Pages |
+| Backend | None (fully client-side) |
+
+## Local Development
+
+```bash
+git clone https://github.com/itzneel05/DorkShift.git
+cd sdme
+npm install
+npm run dev
+```
+
+Open the URL printed by Vite (typically `http://localhost:5173`).
+
+## Build
+
+```bash
+npm run build
+```
+
+Produces a static build in `dist/`.
+
+## Project Structure
+
+```
+sdme/
+├── index.html
+├── package.json
+├── vite.config.js
+├── tailwind.config.js
+├── public/
+├── src/
+│   ├── main.jsx
+│   ├── App.jsx                      # Root state + pipeline orchestration
+│   ├── data/
+│   │   ├── categories.json          # 30 categories w/ keywords + severity
+│   │   ├── platforms.json           # 12 platforms w/ operators + target types
+│   │   ├── mutations.json           # 5 mutation strategies w/ config schemas
+│   │   ├── frameworks.json          # Framework-specific patterns (10 frameworks)
+│   │   └── templates.json           # 10 pre-built template packs
+│   ├── engine/
+│   │   ├── parser.js                # Tokenise raw dork input
+│   │   ├── intentClassifier.js      # Classify input against category keywords
+│   │   ├── vocabularyEngine.js      # Expand keywords into semantic variants
+│   │   ├── mutationEngine.js        # Apply mutation strategies
+│   │   ├── platformTranslator.js    # Translate dorks per-platform + inject targets
+│   │   └── outputFormatter.js       # Shape results for rendering
+│   ├── components/
+│   │   ├── SelectionPane.jsx        # Target input, seed input, classifier banner
+│   │   ├── CategoryList.jsx         # Searchable flat category list
+│   │   ├── PlatformList.jsx         # Toggleable platform list w/ relevance dimming
+│   │   ├── RecipePane.jsx           # Template dropdown + mutation strategies
+│   │   ├── StrategyStep.jsx         # Toggleable, collapsible strategy row
+│   │   ├── TemplateDropdown.jsx     # Template selector w/ hover preview
+│   │   ├── OutputPane.jsx           # Results browser w/ tabs, sort, summary
+│   │   ├── DorkRow.jsx              # Dork display w/ copy + launch actions
+│   │   └── RunButton.jsx            # RUN / RUNNING trigger
+│   └── utils/
+│       ├── urlBuilder.js            # Build platform search URLs
+│       ├── deduplicator.js          # Deduplication strategies
+│       ├── scorer.js                # Dork relevance scoring
+│       └── shareUrl.js              # State encode/decode for URL sharing
+```
+
+## Design Principles
+
+- **Flat panels, no shadows** — border-radius 0–4px max
+- **Minimal colour** — ≤10 tokens, reserved for state/meaning
+- **No decorative animation** — transitions ≤150ms, functional only
+- **Monospace-forward** — JetBrains Mono for code, sans for UI chrome
+- **3-pane layout** — Selection, Recipe, Output (CyberChef-inspired)
+
+## License
+
+MIT
