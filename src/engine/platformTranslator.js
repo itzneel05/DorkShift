@@ -1,3 +1,10 @@
+function stripOuterQuotes(str) {
+  if (str.length >= 2 && str.startsWith('"') && str.endsWith('"')) {
+    return str.slice(1, -1)
+  }
+  return str
+}
+
 function buildSearchUrl(platform, dorkString, platformData) {
   const template = platformData.url_template
   if (!template) return ''
@@ -57,12 +64,27 @@ export function translateForPlatform(dorkStrings, platformId, category, platform
 
   for (const dork of dorkStrings) {
     const injected = applyTargetOperator(dork, targetState, platformData, platforms)
-    const launchUrl = buildSearchUrl(platformId, injected.displayDork, platformData)
+
+    const shouldStrip = platformId === 'fofa'
+    const displayDork = shouldStrip ? stripOuterQuotes(injected.displayDork) : injected.displayDork
+    const rawDork = shouldStrip ? stripOuterQuotes(injected.rawDork) : injected.rawDork
+
+    const launchUrl = buildSearchUrl(platformId, displayDork, platformData)
     results.push({
-      dork: injected.displayDork,
-      rawDork: injected.rawDork,
+      dork: displayDork,
+      rawDork,
       launchUrl,
       operatorType: injected.operatorType,
+    })
+  }
+
+  if (platformId === 'fofa') {
+    const seen = new Set()
+    return results.filter(r => {
+      const key = r.dork.toLowerCase()
+      if (seen.has(key)) return false
+      seen.add(key)
+      return true
     })
   }
 

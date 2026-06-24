@@ -33,10 +33,12 @@ function App() {
   const [isRunning, setIsRunning] = useState(false)
   const [lastDuration, setLastDuration] = useState(0)
   const [lastStats, setLastStats] = useState({ dedupCount: 0, wasCapped: false })
-  const [lastRunConfigHash, setLastRunConfigHash] = useState(null)
   const [viewportWide, setViewportWide] = useState(window.innerWidth >= 1024)
+  const [autoRunEnabled, setAutoRunEnabled] = useState(true)
 
   const classifyTimer = useRef(null)
+  const autoRunTimer = useRef(null)
+  const isOutputFocused = useRef(false)
   const appRef = useRef(null)
 
   const allPlatformIds = platformsData.map(p => p.id)
@@ -73,20 +75,6 @@ function App() {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
-
-  const configHash = useMemo(() => {
-    const parts = [
-      seedInput || '',
-      selectedCategoryId || '',
-      [...activePlatformIds].sort().join(','),
-      [...enabledMutationIds].sort().join(','),
-      targetType || '',
-      targetValue || '',
-    ]
-    return parts.join('|')
-  }, [seedInput, selectedCategoryId, activePlatformIds, enabledMutationIds, targetType, targetValue])
-
-  const isStale = results && lastRunConfigHash !== null && configHash !== lastRunConfigHash
 
   const selectedCategory = categoriesData.find(c => c.id === selectedCategoryId) || null
 
@@ -181,75 +169,87 @@ function App() {
     }
   }, [])
 
-  const handleRun = useCallback(() => {
+  const runPipeline = useCallback(() => {
     if (!selectedCategory) return
     if (activePlatformIds.length === 0) return
+    if (isRunning) return
 
     setIsRunning(true)
+    const startTime = performance.now()
 
-    setTimeout(() => {
-      try {
-        const startTime = performance.now()
+    try {
+      const variants = expandVocabulary(selectedCategory, { max_variants: 50 })
 
-        const variants = expandVocabulary(selectedCategory, { max_variants: 50 })
+      const maxOutput = 25
+      const mutatedDorks = runMutations(variants, selectedCategory, {
+        mutations: enabledMutationIds,
+        mutationConfigs,
+        frameworkData: frameworksData,
+        maxOutput,
+      })
 
-        const maxOutput = 25
-        const mutatedDorks = runMutations(variants, selectedCategory, {
-          mutations: enabledMutationIds,
-          mutationConfigs,
-          frameworkData: frameworksData,
-          maxOutput,
-        })
+      const deduped = deduplicate(mutatedDorks, 'lowercase')
+      const dedupCount = mutatedDorks.length - deduped.length
 
-        const deduped = deduplicate(mutatedDorks, 'lowercase')
-        const dedupCount = mutatedDorks.length - deduped.length
-
-        const platformResults = {}
-        for (const pid of activePlatformIds) {
-          const translated = translateForPlatform(deduped, pid, selectedCategory, platformsData, targetState)
-          if (translated.length > 0) {
-            platformResults[pid] = translated
-          }
+      const platformResults = {}
+      for (const pid of activePlatformIds) {
+        const translated = translateForPlatform(deduped, pid, selectedCategory, platformsData, targetState)
+        if (translated.length > 0) {
+          platformResults[pid] = translated
         }
-
-        const endTime = performance.now()
-        const duration = Math.round(endTime - startTime)
-
-        const wasCapped = Object.values(platformResults).some((dorks) => dorks.length >= maxOutput)
-        const formatted = formatOutput(platformResults, selectedCategory, mutationConfigs, duration)
-        setResults(formatted)
-        setLastDuration(duration)
-        setLastStats({ dedupCount, wasCapped })
-        setLastRunConfigHash(configHash)
-
-        const shareState = {
-          seedInput,
-          category: selectedCategoryId,
-          platforms: activePlatformIds,
-          mutations: enabledMutationIds,
-          targetType,
-          targetValue,
-        }
-        const encoded = encodeState(shareState)
-        if (encoded) {
-          const url = new URL(window.location)
-          url.searchParams.set('s', encoded)
-          window.history.replaceState({}, '', url)
-        }
-      } catch (err) {
-        console.error('RUN error:', err)
-      } finally {
-        setIsRunning(false)
       }
-    }, 50)
-  }, [selectedCategory, activePlatformIds, enabledMutationIds, mutationConfigs, targetState, configHash, seedInput])
+
+      const duration = Math.round(performance.now() - startTime)
+
+      const wasCapped = Object.values(platformResults).some((dorks) => dorks.length >= maxOutput)
+      const formatted = formatOutput(platformResults, selectedCategory, mutationConfigs, duration)
+      setResults(formatted)
+      setLastDuration(duration)
+      setLastStats({ dedupCount, wasCapped })
+
+      const shareState = {
+        seedInput,
+        category: selectedCategoryId,
+        platforms: activePlatformIds,
+        mutations: enabledMutationIds,
+        targetType,
+        targetValue,
+      }
+      const encoded = encodeState(shareState)
+      if (encoded) {
+        const url = new URL(window.location)
+        url.searchParams.set('s', encoded)
+        window.history.replaceState({}, '', url)
+      }
+    } catch (err) {
+      console.error('Pipeline error:', err)
+    } finally {
+      setIsRunning(false)
+    }
+  }, [selectedCategory, activePlatformIds, enabledMutationIds, mutationConfigs, targetState, seedInput])
+
+  const handleRun = useCallback(() => {
+    if (autoRunTimer.current) clearTimeout(autoRunTimer.current)
+    runPipeline()
+  }, [runPipeline])
+
+  useEffect(() => {
+    if (!autoRunEnabled) return
+    if (autoRunTimer.current) clearTimeout(autoRunTimer.current)
+    autoRunTimer.current = setTimeout(() => {
+      if (!isOutputFocused.current) {
+        runPipeline()
+      }
+    }, 250)
+    return () => {
+      if (autoRunTimer.current) clearTimeout(autoRunTimer.current)
+    }
+  }, [seedInput, selectedCategoryId, activePlatformIds, enabledMutationIds, mutationConfigs, targetType, targetValue, autoRunEnabled, runPipeline])
 
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        if (selectedCategory && activePlatformIds.length > 0) {
-          handleRun()
-        }
+        handleRun()
       }
       if (e.key === 'Escape') {
         setSelectedCategoryId(null)
@@ -258,7 +258,11 @@ function App() {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [selectedCategory, activePlatformIds, handleRun])
+  }, [handleRun])
+
+  const handleOutputFocusChange = useCallback((focused) => {
+    isOutputFocused.current = focused
+  }, [])
 
   if (!viewportWide) {
     return (
@@ -311,7 +315,9 @@ function App() {
           selectedCategory={selectedCategory}
           duration={lastDuration}
           stats={lastStats}
-          isStale={isStale}
+          autoRunEnabled={autoRunEnabled}
+          onAutoRunToggle={() => setAutoRunEnabled(p => !p)}
+          onOutputFocusChange={handleOutputFocusChange}
         />
       </div>
     </div>

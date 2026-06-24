@@ -1,12 +1,12 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { saveAs } from 'file-saver'
 import { scoreDork } from '../utils/scorer.js'
-import RunButton from './RunButton.jsx'
 import DorkRow from './DorkRow.jsx'
 
-function OutputPane({ results, isRunning, onRun, platforms, selectedCategory, duration, stats, isStale }) {
+function OutputPane({ results, isRunning, onRun, platforms, selectedCategory, duration, stats, autoRunEnabled, onAutoRunToggle, onOutputFocusChange }) {
   const [activeTab, setActiveTab] = useState(null)
   const [sortBy, setSortBy] = useState('platform')
+  const paneRef = useRef(null)
 
   const platformNames = {}
   for (const p of platforms) {
@@ -42,39 +42,61 @@ function OutputPane({ results, isRunning, onRun, platforms, selectedCategory, du
   }
 
   return (
-    <div className="p-2 h-full flex flex-col gap-2">
-      <RunButton
-        onClick={onRun}
-        isRunning={isRunning}
-        disabled={!selectedCategory}
-      />
-
-      {results && (
-        <div className="flex items-center gap-2 text-[10px] text-muted font-sans">
-          <span>{results.totalCount} dorks across {platformIds.length} platforms | Generated in {duration}ms</span>
-          <span className="flex-1" />
-          {results.totalCount > 0 && (
-            <>
-              <select
-                value={sortBy}
-                onChange={e => setSortBy(e.target.value)}
-                className="bg-transparent text-muted text-[10px] border border-border outline-none px-1 py-0.5"
-              >
-                <option value="platform">Sort: platform</option>
-                <option value="relevance">Sort: relevance</option>
-                <option value="alphabetical">Sort: A-Z</option>
-              </select>
-              <span
-                className="text-muted cursor-pointer hover:text-text"
-                onClick={() => onRun()}
-                title="Clear results"
-              >
-                Clear
-              </span>
-            </>
-          )}
-        </div>
-      )}
+    <div
+      className="p-2 h-full flex flex-col gap-2"
+      ref={paneRef}
+      onMouseEnter={() => onOutputFocusChange(true)}
+      onMouseLeave={() => onOutputFocusChange(false)}
+    >
+      <div className="flex items-center gap-2 text-[10px] font-sans">
+        <span
+          onClick={onAutoRunToggle}
+          className={`cursor-pointer select-none px-1.5 py-0.5 border ${
+            autoRunEnabled
+              ? 'bg-accent/20 text-accent border-accent'
+              : 'text-muted border-border'
+          }`}
+          title={autoRunEnabled ? 'Auto: generation runs on changes' : 'Manual: click to generate'}
+        >
+          {autoRunEnabled ? 'Auto \u27F3' : 'Manual \u25B6'}
+        </span>
+        {!autoRunEnabled && (
+          <span
+            onClick={onRun}
+            className={`cursor-pointer select-none px-1.5 py-0.5 border border-accent text-accent ${
+              isRunning ? 'opacity-50' : ''
+            }`}
+          >
+            {isRunning ? '...' : 'Run'}
+          </span>
+        )}
+        {results && (
+          <span className="text-muted">
+            {results.totalCount} dorks &middot; {platformIds.length} platforms &middot; {duration}ms
+          </span>
+        )}
+        <span className="flex-1" />
+        {results && results.totalCount > 0 && (
+          <>
+            <select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value)}
+              className="bg-transparent text-muted text-[10px] border border-border outline-none px-1 py-0.5"
+            >
+              <option value="platform">Sort: platform</option>
+              <option value="relevance">Sort: relevance</option>
+              <option value="alphabetical">Sort: A-Z</option>
+            </select>
+            <span
+              className="text-muted cursor-pointer hover:text-text"
+              onClick={() => onRun()}
+              title="Re-run"
+            >
+              Clear
+            </span>
+          </>
+        )}
+      </div>
 
       {stats && (stats.dedupCount > 0 || stats.wasCapped) && results && (
         <div className="text-[10px] text-muted font-sans italic">
@@ -84,17 +106,11 @@ function OutputPane({ results, isRunning, onRun, platforms, selectedCategory, du
         </div>
       )}
 
-      {isStale && results && (
-        <div className="text-[10px] text-warning font-sans">
-          Results stale — re-run to update
-        </div>
-      )}
-
       {!results && !isRunning && (
         <div className="flex-1 flex items-center justify-center text-xs text-muted font-sans">
-          {selectedCategory
-            ? 'Select platforms and press RUN'
-            : 'Select a category to begin'
+          {!selectedCategory
+            ? 'Select a category to begin'
+            : 'Select platforms to generate dorks'
           }
         </div>
       )}
