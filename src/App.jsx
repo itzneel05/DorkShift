@@ -6,7 +6,7 @@ import mutationsData from './data/mutations.json'
 import frameworksData from './data/frameworks.json'
 import templatesData from './data/templates.json'
 
-import { parseDork, parseTarget } from './engine/parser.js'
+import { parseDork } from './engine/parser.js'
 import { classifyIntent } from './engine/intentClassifier.js'
 import { expandVocabulary } from './engine/vocabularyEngine.js'
 import { runMutations } from './engine/mutationEngine.js'
@@ -26,7 +26,8 @@ function App() {
   const [enabledMutationIds, setEnabledMutationIds] = useState([])
   const [mutationConfigs, setMutationConfigs] = useState({})
   const [classifierResult, setClassifierResult] = useState(null)
-  const [targetState, setTargetState] = useState(null)
+  const [targetType, setTargetType] = useState(null)
+  const [targetValue, setTargetValue] = useState('')
   const [results, setResults] = useState(null)
   const [selectedTemplate, setSelectedTemplate] = useState(null)
   const [isRunning, setIsRunning] = useState(false)
@@ -63,10 +64,8 @@ function App() {
         if (state.category) setSelectedCategoryId(state.category)
         if (state.platforms) setActivePlatformIds(state.platforms)
         if (state.mutations) setEnabledMutationIds(state.mutations)
-        if (state.targetType && state.targetValue) {
-          setTargetState({ type: state.targetType, value: state.targetValue, valid: true, label: state.targetType.toUpperCase() })
-          setSeedInput(`${state.targetType}:${state.targetValue} ${state.seedInput || ''}`)
-        }
+        if (state.targetType) setTargetType(state.targetType)
+        if (state.targetValue) setTargetValue(state.targetValue)
       }
     }
 
@@ -81,14 +80,19 @@ function App() {
       selectedCategoryId || '',
       [...activePlatformIds].sort().join(','),
       [...enabledMutationIds].sort().join(','),
-      targetState ? targetState.type + ':' + targetState.value : '',
+      targetType || '',
+      targetValue || '',
     ]
     return parts.join('|')
-  }, [seedInput, selectedCategoryId, activePlatformIds, enabledMutationIds, targetState])
+  }, [seedInput, selectedCategoryId, activePlatformIds, enabledMutationIds, targetType, targetValue])
 
   const isStale = results && lastRunConfigHash !== null && configHash !== lastRunConfigHash
 
   const selectedCategory = categoriesData.find(c => c.id === selectedCategoryId) || null
+
+  const targetState = targetType && targetValue.trim()
+    ? { type: targetType, value: targetValue.trim(), valid: true, label: targetType.toUpperCase() }
+    : null
 
   const debouncedClassify = useCallback((input) => {
     if (classifyTimer.current) {
@@ -97,15 +101,10 @@ function App() {
     classifyTimer.current = setTimeout(() => {
       if (!input || !input.trim()) {
         setClassifierResult(null)
-        setTargetState(null)
         return
       }
 
-      const target = parseTarget(input)
-      setTargetState(target && target.type ? { type: target.type, value: target.value, valid: target.valid, label: target.label } : null)
-
-      const seedForParse = target && target.type ? target.seedInput || target.value : input
-      const parsed = parseDork(seedForParse)
+      const parsed = parseDork(input)
       const result = classifyIntent(parsed, categoriesData)
       setClassifierResult(result.confidence > 0 ? result : null)
     }, 300)
@@ -115,6 +114,14 @@ function App() {
     setSeedInput(value)
     debouncedClassify(value)
   }, [debouncedClassify])
+
+  const handleTargetTypeChange = useCallback((type) => {
+    setTargetType(prev => prev === type ? null : type)
+  }, [])
+
+  const handleTargetValueChange = useCallback((value) => {
+    setTargetValue(value)
+  }, [])
 
   const handleCategorySelect = useCallback((categoryId) => {
     setSelectedCategoryId(categoryId)
@@ -220,8 +227,8 @@ function App() {
           category: selectedCategoryId,
           platforms: activePlatformIds,
           mutations: enabledMutationIds,
-          targetType: targetState?.type || null,
-          targetValue: targetState?.value || null,
+          targetType,
+          targetValue,
         }
         const encoded = encodeState(shareState)
         if (encoded) {
@@ -274,7 +281,10 @@ function App() {
           activePlatformIds={activePlatformIds}
           onPlatformToggle={handlePlatformToggle}
           classifierResult={classifierResult}
-          targetState={targetState}
+          targetType={targetType}
+          targetValue={targetValue}
+          onTargetTypeChange={handleTargetTypeChange}
+          onTargetValueChange={handleTargetValueChange}
           enabledMutationIds={enabledMutationIds}
         />
       </div>
