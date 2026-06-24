@@ -38,8 +38,19 @@ function OutputPane({ results, isRunning, onRun, platforms, selectedCategory, du
   }
 
   const handleExportTxt = () => {
-    if (!results || !results.raw) return
-    const blob = new Blob([results.raw], { type: 'text/plain;charset=utf-8' })
+    if (!results) return
+    const lines = []
+    for (const pid of platformIds) {
+      const dorks = results.byPlatform[pid]?.dorks || []
+      if (dorks.length === 0) continue
+      lines.push(`=== ${platformNames[pid] || pid} (${dorks.length}) ===`)
+      for (const d of dorks) {
+        lines.push(d.launchUrl || d.dork)
+      }
+      lines.push('')
+    }
+    const text = lines.join('\n').trim() || 'No results'
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' })
     saveAs(blob, `dorkshift-${selectedCategory?.id || 'output'}-${Date.now()}.txt`)
   }
 
