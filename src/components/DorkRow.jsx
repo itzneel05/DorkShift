@@ -1,11 +1,29 @@
 import { useState } from 'react'
 
-function DorkRow({ dork, launchUrl }) {
+const OP_COLORS = {
+  native: 'text-accent',
+  relay: 'text-warning',
+  bare: 'text-muted',
+  none: 'text-muted',
+}
+
+function DorkRow({ dork, rawDork, launchUrl, operatorType }) {
   const [copied, setCopied] = useState(false)
+
+  const copyText = rawDork || dork
+  const opColor = OP_COLORS[operatorType] || 'text-muted'
+
+  let operatorPart = ''
+  let bodyPart = dork
+  if ((operatorType === 'native' || operatorType === 'relay') && rawDork && dork.endsWith(rawDork)) {
+    const splitAt = dork.length - rawDork.length
+    operatorPart = dork.slice(0, splitAt)
+    bodyPart = dork.slice(splitAt)
+  }
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(dork)
+      await navigator.clipboard.writeText(copyText)
       setCopied(true)
       setTimeout(() => setCopied(false), 1500)
     } catch {}
@@ -17,11 +35,9 @@ function DorkRow({ dork, launchUrl }) {
 
   return (
     <div className="flex items-center gap-1.5 px-2 py-1 border-b border-[#1a1a1a] text-xs">
-      <span
-        className="flex-1 font-mono text-xs text-[#ddd] truncate"
-        title={dork}
-      >
-        {dork}
+      <span className="flex-1 font-mono text-xs leading-snug overflow-hidden" title={dork}>
+        <span className={opColor}>{operatorPart}</span>
+        <span className="text-text">{bodyPart}</span>
       </span>
       <button
         onClick={handleCopy}

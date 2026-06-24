@@ -90,7 +90,7 @@ function OutputPane({ results, isRunning, onRun, platforms, selectedCategory, du
 
               <div className="flex-1 overflow-y-auto">
                 {results.byPlatform[currentTab].dorks.map((item, idx) => (
-                  <DorkRow key={idx} dork={item.dork} launchUrl={item.launchUrl} />
+                  <DorkRow key={idx} dork={item.dork} rawDork={item.rawDork} launchUrl={item.launchUrl} operatorType={item.operatorType} />
                 ))}
               </div>
             </div>
