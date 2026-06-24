@@ -4,7 +4,7 @@ import { scoreDork } from '../utils/scorer.js'
 import RunButton from './RunButton.jsx'
 import DorkRow from './DorkRow.jsx'
 
-function OutputPane({ results, isRunning, onRun, platforms, selectedCategory, duration, stats }) {
+function OutputPane({ results, isRunning, onRun, platforms, selectedCategory, duration, stats, isStale }) {
   const [activeTab, setActiveTab] = useState(null)
   const [sortBy, setSortBy] = useState('platform')
 
@@ -81,6 +81,12 @@ function OutputPane({ results, isRunning, onRun, platforms, selectedCategory, du
           {stats.dedupCount > 0 && `Deduplication removed ${stats.dedupCount} duplicate dorks`}
           {stats.dedupCount > 0 && stats.wasCapped && ' | '}
           {stats.wasCapped && 'Output capped at 25 dorks per platform'}
+        </div>
+      )}
+
+      {isStale && results && (
+        <div className="text-[10px] text-warning font-sans">
+          Results stale — re-run to update
         </div>
       )}
 

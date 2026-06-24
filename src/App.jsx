@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 
 import categoriesData from './data/categories.json'
 import platformsData from './data/platforms.json'
@@ -32,8 +32,11 @@ function App() {
   const [isRunning, setIsRunning] = useState(false)
   const [lastDuration, setLastDuration] = useState(0)
   const [lastStats, setLastStats] = useState({ dedupCount: 0, wasCapped: false })
+  const [lastRunConfigHash, setLastRunConfigHash] = useState(null)
+  const [viewportWide, setViewportWide] = useState(window.innerWidth >= 1024)
 
   const classifyTimer = useRef(null)
+  const appRef = useRef(null)
 
   const allPlatformIds = platformsData.map(p => p.id)
   const allMutationIds = mutationsData.map(m => m.id)
@@ -50,7 +53,40 @@ function App() {
       }
     }
     setMutationConfigs(defaultConfigs)
+
+    const params = new URLSearchParams(window.location.search)
+    const saved = params.get('s')
+    if (saved) {
+      const state = decodeState(saved)
+      if (state) {
+        if (state.seedInput) setSeedInput(state.seedInput)
+        if (state.category) setSelectedCategoryId(state.category)
+        if (state.platforms) setActivePlatformIds(state.platforms)
+        if (state.mutations) setEnabledMutationIds(state.mutations)
+        if (state.targetType && state.targetValue) {
+          setTargetState({ type: state.targetType, value: state.targetValue, valid: true, label: state.targetType.toUpperCase() })
+          setSeedInput(`${state.targetType}:${state.targetValue} ${state.seedInput || ''}`)
+        }
+      }
+    }
+
+    const handleResize = () => setViewportWide(window.innerWidth >= 1024)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
+
+  const configHash = useMemo(() => {
+    const parts = [
+      seedInput || '',
+      selectedCategoryId || '',
+      [...activePlatformIds].sort().join(','),
+      [...enabledMutationIds].sort().join(','),
+      targetState ? targetState.type + ':' + targetState.value : '',
+    ]
+    return parts.join('|')
+  }, [seedInput, selectedCategoryId, activePlatformIds, enabledMutationIds, targetState])
+
+  const isStale = results && lastRunConfigHash !== null && configHash !== lastRunConfigHash
 
   const selectedCategory = categoriesData.find(c => c.id === selectedCategoryId) || null
 
@@ -177,16 +213,56 @@ function App() {
         setResults(formatted)
         setLastDuration(duration)
         setLastStats({ dedupCount, wasCapped })
+        setLastRunConfigHash(configHash)
+
+        const shareState = {
+          seedInput,
+          category: selectedCategoryId,
+          platforms: activePlatformIds,
+          mutations: enabledMutationIds,
+          targetType: targetState?.type || null,
+          targetValue: targetState?.value || null,
+        }
+        const encoded = encodeState(shareState)
+        if (encoded) {
+          const url = new URL(window.location)
+          url.searchParams.set('s', encoded)
+          window.history.replaceState({}, '', url)
+        }
       } catch (err) {
         console.error('RUN error:', err)
       } finally {
         setIsRunning(false)
       }
     }, 50)
-  }, [selectedCategory, activePlatformIds, enabledMutationIds, mutationConfigs, targetState])
+  }, [selectedCategory, activePlatformIds, enabledMutationIds, mutationConfigs, targetState, configHash, seedInput])
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        if (selectedCategory && activePlatformIds.length > 0) {
+          handleRun()
+        }
+      }
+      if (e.key === 'Escape') {
+        setSelectedCategoryId(null)
+        setClassifierResult(null)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedCategory, activePlatformIds, handleRun])
+
+  if (!viewportWide) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-bg text-text font-sans text-sm px-8 text-center">
+        Desktop browser required — resize to &gt;1024px
+      </div>
+    )
+  }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen" ref={appRef}>
       <div className="flex-1 border-r border-border overflow-auto">
         <SelectionPane
           seedInput={seedInput}
@@ -225,6 +301,7 @@ function App() {
           selectedCategory={selectedCategory}
           duration={lastDuration}
           stats={lastStats}
+          isStale={isStale}
         />
       </div>
     </div>
