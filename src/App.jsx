@@ -154,7 +154,7 @@ function App() {
 
         const platformResults = {}
         for (const pid of activePlatformIds) {
-          const translated = translateForPlatform(deduped, pid, selectedCategory, platformsData)
+          const translated = translateForPlatform(deduped, pid, selectedCategory, platformsData, targetState)
           if (translated.length > 0) {
             platformResults[pid] = translated
           }
@@ -172,7 +172,7 @@ function App() {
         setIsRunning(false)
       }
     }, 50)
-  }, [selectedCategory, activePlatformIds, enabledMutationIds, mutationConfigs])
+  }, [selectedCategory, activePlatformIds, enabledMutationIds, mutationConfigs, targetState])
 
   return (
     <div className="flex h-screen">

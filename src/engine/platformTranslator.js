@@ -12,14 +12,42 @@ function buildSearchUrl(platform, dorkString, platformData) {
   return url
 }
 
-function formatPlatformQuery(dorkString, platformId, syntaxGuide) {
-  if (platformId === 'google' && !dorkString.match(/^(site|inurl|intitle|filetype|intext):/i)) {
-    return dorkString
+function applyOperatorPrefix(operator, value) {
+  if (operator.endsWith('=')) {
+    return operator + '"' + value + '"'
   }
-  return dorkString
+  return operator + value
 }
 
-export function translateForPlatform(dorkStrings, platformId, category, platforms) {
+export function applyTargetOperator(dorkString, targetState, platformData, allPlatforms) {
+  if (!targetState || !targetState.type || !targetState.value) {
+    return { displayDork: dorkString, rawDork: dorkString, operatorType: 'none' }
+  }
+
+  const type = targetState.type
+  const targetValue = targetState.value
+
+  const nativeOp = platformData.target_types[type]
+  if (nativeOp) {
+    const displayDork = applyOperatorPrefix(nativeOp, targetValue) + ' ' + dorkString
+    return { displayDork, rawDork: dorkString, operatorType: 'native' }
+  }
+
+  if (platformData.relay) {
+    const relayPlatform = allPlatforms.find(p => p.id === platformData.relay)
+    if (relayPlatform) {
+      const relayOp = relayPlatform.target_types[type]
+      if (relayOp) {
+        const displayDork = applyOperatorPrefix(relayOp, targetValue) + ' ' + dorkString
+        return { displayDork, rawDork: dorkString, operatorType: 'relay' }
+      }
+    }
+  }
+
+  return { displayDork: dorkString, rawDork: dorkString, operatorType: 'bare' }
+}
+
+export function translateForPlatform(dorkStrings, platformId, category, platforms, targetState) {
   if (!dorkStrings || dorkStrings.length === 0) return []
 
   const platformData = platforms.find(p => p.id === platformId)
@@ -28,9 +56,14 @@ export function translateForPlatform(dorkStrings, platformId, category, platform
   const results = []
 
   for (const dork of dorkStrings) {
-    const query = formatPlatformQuery(dork, platformId, platformData.syntax_guide)
-    const launchUrl = buildSearchUrl(platformId, query, platformData)
-    results.push({ dork: query, launchUrl })
+    const injected = applyTargetOperator(dork, targetState, platformData, platforms)
+    const launchUrl = buildSearchUrl(platformId, injected.displayDork, platformData)
+    results.push({
+      dork: injected.displayDork,
+      rawDork: injected.rawDork,
+      launchUrl,
+      operatorType: injected.operatorType,
+    })
   }
 
   return results
