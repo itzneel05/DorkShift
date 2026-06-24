@@ -103,3 +103,74 @@ export function parseDork(rawInput) {
 
   return { tokens, platform, type, raw: trimmed }
 }
+
+const TARGET_PREFIX_RE = /^([dhor]):(\S+)(?:\s+(.*))?$/i
+
+const TARGET_LABELS = {
+  d: { label: 'DOMAIN', color: 'accent' },
+  o: { label: 'ORG', color: 'accent' },
+  r: { label: 'REPO', color: 'accent' },
+  h: { label: 'HOST', color: 'accent' },
+}
+
+function isValidHost(value) {
+  const ipRe = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(\/\d{1,2})?$/
+  const hostRe = /^[a-zA-Z0-9.-]+(:\d+)?$/
+  return ipRe.test(value) || hostRe.test(value)
+}
+
+function isValidDomain(value) {
+  return /^[a-zA-Z0-9][a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
+}
+
+export function parseTarget(rawInput) {
+  if (!rawInput || !rawInput.trim()) {
+    return { type: null, value: null, seedInput: rawInput || '', raw: rawInput || '', valid: false, label: null }
+  }
+
+  const match = rawInput.trim().match(TARGET_PREFIX_RE)
+  if (!match) {
+    return { type: null, value: null, seedInput: rawInput.trim(), raw: rawInput.trim(), valid: false, label: 'BARE KEYWORD' }
+  }
+
+  const prefix = match[1].toLowerCase()
+  const value = match[2]
+  const seedInput = match[3] || ''
+
+  if (!value) {
+    return { type: null, value: null, seedInput: rawInput.trim(), raw: rawInput.trim(), valid: false, label: 'BARE KEYWORD' }
+  }
+
+  const info = TARGET_LABELS[prefix]
+
+  if (prefix === 'd') {
+    return {
+      type: 'd',
+      value,
+      seedInput,
+      raw: rawInput.trim(),
+      valid: isValidDomain(value),
+      label: info.label,
+    }
+  }
+
+  if (prefix === 'h') {
+    return {
+      type: 'h',
+      value,
+      seedInput,
+      raw: rawInput.trim(),
+      valid: isValidHost(value),
+      label: info.label,
+    }
+  }
+
+  return {
+    type: prefix,
+    value,
+    seedInput,
+    raw: rawInput.trim(),
+    valid: true,
+    label: info.label,
+  }
+}

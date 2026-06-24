@@ -6,7 +6,7 @@ import mutationsData from './data/mutations.json'
 import frameworksData from './data/frameworks.json'
 import templatesData from './data/templates.json'
 
-import { parseDork } from './engine/parser.js'
+import { parseDork, parseTarget } from './engine/parser.js'
 import { classifyIntent } from './engine/intentClassifier.js'
 import { expandVocabulary } from './engine/vocabularyEngine.js'
 import { runMutations } from './engine/mutationEngine.js'
@@ -26,6 +26,7 @@ function App() {
   const [enabledMutationIds, setEnabledMutationIds] = useState([])
   const [mutationConfigs, setMutationConfigs] = useState({})
   const [classifierResult, setClassifierResult] = useState(null)
+  const [targetState, setTargetState] = useState(null)
   const [results, setResults] = useState(null)
   const [isRunning, setIsRunning] = useState(false)
   const [lastDuration, setLastDuration] = useState(0)
@@ -58,9 +59,15 @@ function App() {
     classifyTimer.current = setTimeout(() => {
       if (!input || !input.trim()) {
         setClassifierResult(null)
+        setTargetState(null)
         return
       }
-      const parsed = parseDork(input)
+
+      const target = parseTarget(input)
+      setTargetState(target && target.type ? { type: target.type, value: target.value, valid: target.valid, label: target.label } : null)
+
+      const seedForParse = target && target.type ? target.seedInput || target.value : input
+      const parsed = parseDork(seedForParse)
       const result = classifyIntent(parsed, categoriesData)
       setClassifierResult(result.confidence > 0 ? result : null)
     }, 300)
@@ -180,6 +187,7 @@ function App() {
           activePlatformIds={activePlatformIds}
           onPlatformToggle={handlePlatformToggle}
           classifierResult={classifierResult}
+          targetState={targetState}
         />
       </div>
 

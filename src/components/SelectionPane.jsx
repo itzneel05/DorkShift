@@ -11,11 +11,15 @@ function SelectionPane({
   activePlatformIds,
   onPlatformToggle,
   classifierResult,
+  targetState,
 }) {
   const bannerStyle = !classifierResult ? '' :
     classifierResult.confidence >= 0.4
       ? 'bg-success/20 text-success border border-success'
       : 'bg-warning/20 text-warning border border-warning'
+
+  const tagColor = !targetState || !targetState.type ? 'text-muted' :
+    targetState.valid ? 'text-accent' : 'text-warning'
 
   return (
     <div className="p-2 h-full flex flex-col gap-2">
@@ -23,13 +27,18 @@ function SelectionPane({
         <label className="block text-[11px] mb-1 text-muted font-sans">
           SEED DORK
         </label>
-        <input
-          type="text"
-          value={seedInput}
-          onChange={e => onSeedInput(e.target.value)}
-          placeholder="Paste a dork, keyword, or secret..."
-          className="w-full px-2 py-1.5 font-mono text-sm bg-surface text-text border border-border outline-none box-border"
-        />
+        <div className="relative">
+          <input
+            type="text"
+            value={seedInput}
+            onChange={e => onSeedInput(e.target.value)}
+            placeholder="Paste a dork, keyword, or secret..."
+            className="w-full px-2 py-1.5 pr-20 font-mono text-sm bg-surface text-text border border-border outline-none box-border"
+          />
+          <span className={`absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-sans uppercase tracking-wider pointer-events-none ${tagColor}`}>
+            {targetState && targetState.type ? (targetState.valid ? targetState.label : 'INVALID') : 'KEYWORD'}
+          </span>
+        </div>
       </div>
 
       {classifierResult && classifierResult.confidence > 0 && (
