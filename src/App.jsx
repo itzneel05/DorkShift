@@ -28,6 +28,7 @@ function App() {
   const [classifierResult, setClassifierResult] = useState(null)
   const [targetState, setTargetState] = useState(null)
   const [results, setResults] = useState(null)
+  const [selectedTemplate, setSelectedTemplate] = useState(null)
   const [isRunning, setIsRunning] = useState(false)
   const [lastDuration, setLastDuration] = useState(0)
 
@@ -114,7 +115,12 @@ function App() {
   }, [])
 
   const handleTemplateSelect = useCallback((template) => {
-    if (!template || !template.config) return
+    if (!template) {
+      setSelectedTemplate(null)
+      return
+    }
+    if (!template.config) return
+    setSelectedTemplate(template)
     const cfg = template.config
     if (cfg.category) setSelectedCategoryId(cfg.category)
     if (cfg.platforms) setActivePlatformIds(cfg.platforms)
@@ -201,6 +207,7 @@ function App() {
           onMutationConfigChange={handleMutationConfigChange}
           templates={templatesData}
           onTemplateSelect={handleTemplateSelect}
+          selectedTemplate={selectedTemplate}
         />
       </div>
 

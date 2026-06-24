@@ -1,9 +1,10 @@
-function TemplateDropdown({ templates, onTemplateSelect }) {
+import { useState } from 'react'
+
+function TemplateDropdown({ templates, onTemplateSelect, selectedTemplate }) {
+  const [preview, setPreview] = useState(null)
+
   return (
     <div className="mb-2">
-      <div className="text-[11px] mb-1 text-muted font-sans">
-        TEMPLATE GALLERY
-      </div>
       <select
         onChange={e => {
           const tpl = templates.find(t => t.id === e.target.value)
@@ -18,6 +19,37 @@ function TemplateDropdown({ templates, onTemplateSelect }) {
           <option key={t.id} value={t.id}>{t.name}</option>
         ))}
       </select>
+
+      <div
+        className="mt-1"
+        onMouseEnter={() => setPreview(true)}
+        onMouseLeave={() => setPreview(false)}
+      >
+        {preview && (
+          <div className="text-[10px] text-muted font-sans leading-relaxed p-1 border border-border bg-surface">
+            {templates.slice(0, 3).map(t => (
+              <div key={t.id} className="truncate" title={`${t.name}: ${t.description}`}>
+                {t.name} &mdash; {t.description}
+              </div>
+            ))}
+            {templates.length > 3 && (
+              <div className="text-muted italic">+{templates.length - 3} more</div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {selectedTemplate && (
+        <div className="mt-1 text-[10px] text-muted font-sans">
+          Active: {selectedTemplate.name}
+          <span
+            className="ml-1 text-accent cursor-pointer"
+            onClick={() => onTemplateSelect(null)}
+          >
+            (reset to manual)
+          </span>
+        </div>
+      )}
     </div>
   )
 }
