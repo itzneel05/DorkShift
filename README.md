@@ -110,6 +110,22 @@ sdme/
 - **Monospace-forward** — JetBrains Mono for code, sans for UI chrome
 - **3-pane layout** — Selection, Recipe, Output (CyberChef-inspired)
 
+## Documentation
+
+Additional documentation is available as Markdown files in the project root:
+
+| File | Description |
+|------|-------------|
+| [`ARCHITECTURE.md`](./ARCHITECTURE.md) | System design, data flow, and component diagrams |
+| [`WHY.md`](./WHY.md) | Problem statement, audience, and rationale |
+| [`USE_CASES.md`](./USE_CASES.md) | Real-world scenarios and walkthroughs |
+| [`USER_MANUAL.md`](./USER_MANUAL.md) | Step-by-step usage guide |
+| [`FEATURES.md`](./FEATURES.md) | Feature-by-feature breakdown |
+| [`FAQ.md`](./FAQ.md) | Frequently asked questions |
+| [`GLOSSARY.md`](./GLOSSARY.md) | Project-specific terminology |
+| [`CONTRIBUTING.md`](./CONTRIBUTING.md) | How to contribute |
+| [`CHANGELOG.md`](./CHANGELOG.md) | Version history |
+
 ## License
 
 MIT
