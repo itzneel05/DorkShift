@@ -76,8 +76,8 @@ function PlatformList({ platforms, activePlatformIds, onPlatformToggle, targetSt
 
   return (
     <div>
-      <div className="text-[11px] mb-1 text-muted font-sans">
-        PLATFORMS ({platforms.length})
+      <div className="text-[11px] mb-1 text-muted font-mono">
+        [ PLATFORMS &middot; {platforms.length} ]
       </div>
       <div className="max-h-[180px] overflow-y-auto">
         {platforms.map(p => {

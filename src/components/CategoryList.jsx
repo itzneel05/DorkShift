@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function CategoryList({ categories, selectedCategoryId, onCategorySelect, classifierResult }) {
+function CategoryList({ categories, selectedCategoryId, onCategorySelect }) {
   const [searchQuery, setSearchQuery] = useState('')
 
   const filtered = searchQuery.trim()
@@ -10,13 +10,10 @@ function CategoryList({ categories, selectedCategoryId, onCategorySelect, classi
       )
     : categories
 
-  const classifierActive = classifierResult && classifierResult.confidence >= 0.4
-  const classifiedId = classifierActive ? classifierResult.category?.id : null
-
   return (
     <div>
-      <div className="text-[11px] mb-1 text-muted font-sans">
-        CATEGORIES ({categories.length})
+      <div className="text-[11px] mb-1 text-muted font-mono">
+        [ CATEGORIES &middot; {categories.length} ]
       </div>
       <input
         type="text"
@@ -34,11 +31,15 @@ function CategoryList({ categories, selectedCategoryId, onCategorySelect, classi
           <div
             key={cat.id}
             onClick={() => onCategorySelect(cat.id)}
-            className={`px-1.5 py-1 cursor-pointer text-xs font-sans border-b border-[#2a2a2a] ${
+            className={`px-1.5 py-1 cursor-pointer text-xs font-sans border-b border-[#2a2a2a] border-l-2 ${
               cat.id === selectedCategoryId
                 ? 'bg-success/15 text-success'
                 : 'bg-transparent text-text'
-            } ${classifierActive && cat.id !== classifiedId ? 'opacity-40' : ''}`}
+            } ${selectedCategoryId && cat.id !== selectedCategoryId ? 'opacity-40' : ''} ${
+              cat.severity === 'critical' ? 'border-l-danger' :
+              cat.severity === 'high' ? 'border-l-warning' :
+              'border-l-transparent'
+            }`}
           >
             {cat.name}
             <span

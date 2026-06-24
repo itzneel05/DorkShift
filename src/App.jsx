@@ -273,52 +273,64 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen" ref={appRef}>
-      <div className="flex-1 border-r border-border overflow-auto">
-        <SelectionPane
-          seedInput={seedInput}
-          onSeedInput={handleSeedInput}
-          categories={categoriesData}
-          selectedCategoryId={selectedCategoryId}
-          onCategorySelect={handleCategorySelect}
-          platforms={platformsData}
-          activePlatformIds={activePlatformIds}
-          onPlatformToggle={handlePlatformToggle}
-          classifierResult={classifierResult}
-          targetType={targetType}
-          targetValue={targetValue}
-          onTargetTypeChange={handleTargetTypeChange}
-          onTargetValueChange={handleTargetValueChange}
-          enabledMutationIds={enabledMutationIds}
-        />
+    <div className="flex flex-col h-screen" ref={appRef}>
+      <div className="flex flex-1 min-h-0">
+        <div className="flex-[22] border-r border-border overflow-auto">
+          <SelectionPane
+            seedInput={seedInput}
+            onSeedInput={handleSeedInput}
+            categories={categoriesData}
+            selectedCategoryId={selectedCategoryId}
+            onCategorySelect={handleCategorySelect}
+            platforms={platformsData}
+            activePlatformIds={activePlatformIds}
+            onPlatformToggle={handlePlatformToggle}
+            classifierResult={classifierResult}
+            targetType={targetType}
+            targetValue={targetValue}
+            onTargetTypeChange={handleTargetTypeChange}
+            onTargetValueChange={handleTargetValueChange}
+            enabledMutationIds={enabledMutationIds}
+          />
+        </div>
+
+        <div className="flex-[24] border-r border-border overflow-auto">
+          <RecipePane
+            mutations={mutationsData}
+            enabledMutationIds={enabledMutationIds}
+            onMutationToggle={handleMutationToggle}
+            mutationConfigs={mutationConfigs}
+            onMutationConfigChange={handleMutationConfigChange}
+            templates={templatesData}
+            onTemplateSelect={handleTemplateSelect}
+            selectedTemplate={selectedTemplate}
+          />
+        </div>
+
+        <div className="flex-[54] overflow-auto">
+          <OutputPane
+            results={results}
+            isRunning={isRunning}
+            onRun={handleRun}
+            platforms={platformsData}
+            selectedCategory={selectedCategory}
+            duration={lastDuration}
+            stats={lastStats}
+            autoRunEnabled={autoRunEnabled}
+            onAutoRunToggle={() => setAutoRunEnabled(p => !p)}
+            onOutputFocusChange={handleOutputFocusChange}
+          />
+        </div>
       </div>
 
-      <div className="flex-1 border-r border-border overflow-auto">
-        <RecipePane
-          mutations={mutationsData}
-          enabledMutationIds={enabledMutationIds}
-          onMutationToggle={handleMutationToggle}
-          mutationConfigs={mutationConfigs}
-          onMutationConfigChange={handleMutationConfigChange}
-          templates={templatesData}
-          onTemplateSelect={handleTemplateSelect}
-          selectedTemplate={selectedTemplate}
-        />
-      </div>
-
-      <div className="flex-1 overflow-auto">
-        <OutputPane
-          results={results}
-          isRunning={isRunning}
-          onRun={handleRun}
-          platforms={platformsData}
-          selectedCategory={selectedCategory}
-          duration={lastDuration}
-          stats={lastStats}
-          autoRunEnabled={autoRunEnabled}
-          onAutoRunToggle={() => setAutoRunEnabled(p => !p)}
-          onOutputFocusChange={handleOutputFocusChange}
-        />
+      <div className="flex items-center gap-3 px-3 py-1 text-[10px] font-mono border-t border-border bg-surface text-muted shrink-0">
+        <span>category: {selectedCategory?.id || 'none'}</span>
+        <span className="text-border">|</span>
+        <span>platforms: {activePlatformIds.length}/{platformsData.length}</span>
+        <span className="text-border">|</span>
+        <span>strategies: {enabledMutationIds.length}/{mutationsData.length}</span>
+        <span className="text-border">|</span>
+        <span>output: {results ? `${results.totalCount} dorks (${lastDuration}ms)` : '--'}</span>
       </div>
     </div>
   )

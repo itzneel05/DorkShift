@@ -13,7 +13,9 @@ function OutputPane({ results, isRunning, onRun, platforms, selectedCategory, du
     platformNames[p.id] = p.name
   }
 
-  const platformIds = results ? Object.keys(results.byPlatform) : []
+  const platformIds = results
+    ? platforms.filter(p => results.byPlatform[p.id]).map(p => p.id)
+    : []
   const currentTab = activeTab && platformIds.includes(activeTab) ? activeTab : platformIds[0] || null
 
   const sortedDorks = useMemo(() => {
@@ -117,18 +119,18 @@ function OutputPane({ results, isRunning, onRun, platforms, selectedCategory, du
 
       {results && platformIds.length > 0 && (
         <div className="flex-1 flex flex-col min-h-0">
-          <div className="flex border-b border-border shrink-0 overflow-x-auto">
+          <div className="flex border-t border-border shrink-0 overflow-x-auto">
             {platformIds.map(pid => (
               <div
                 key={pid}
                 onClick={() => setActiveTab(pid)}
-                className={`px-2.5 py-1 text-[11px] cursor-pointer font-sans whitespace-nowrap select-none ${
+                className={`px-2.5 py-1 text-[11px] cursor-pointer font-mono whitespace-nowrap select-none border-t-2 ${
                   pid === currentTab
-                    ? 'text-text border-b-2 border-accent'
-                    : 'text-muted border-b-2 border-transparent'
+                    ? 'text-text border-accent'
+                    : 'text-muted border-transparent'
                 }`}
               >
-                {platformNames[pid] || pid} ({results.byPlatform[pid].count})
+                [{platformNames[pid] || pid}&middot;{results.byPlatform[pid].count}]
               </div>
             ))}
           </div>

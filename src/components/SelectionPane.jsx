@@ -42,8 +42,8 @@ function SelectionPane({
   return (
     <div className="p-2 h-full flex flex-col gap-2">
       <div>
-        <label className="block text-[11px] mb-1 text-muted font-sans">
-          TARGET
+        <label className="block text-[11px] mb-1 text-muted font-mono">
+          [ TARGET ]
         </label>
         <div className="flex gap-1 mb-1">
           {TARGET_TYPES.map(t => (
@@ -52,7 +52,7 @@ function SelectionPane({
               onClick={() => onTargetTypeChange(t.id)}
               className={`px-1.5 py-0.5 text-[10px] font-sans cursor-pointer select-none border ${
                 targetType === t.id
-                  ? 'bg-accent/20 text-accent border-accent'
+                  ? 'bg-accent text-bg border-accent'
                   : 'bg-surface text-muted border-border'
               }`}
             >
@@ -80,8 +80,8 @@ function SelectionPane({
       </div>
 
       <div>
-        <label className="block text-[11px] mb-1 text-muted font-sans">
-          SEED DORK
+        <label className="block text-[11px] mb-1 text-muted font-mono">
+          [ SEED DORK ]
         </label>
         <div className="relative">
           <input
@@ -122,7 +122,6 @@ function SelectionPane({
             categories={categories}
             selectedCategoryId={selectedCategoryId}
             onCategorySelect={onCategorySelect}
-            classifierResult={classifierResult}
           />
         </div>
 

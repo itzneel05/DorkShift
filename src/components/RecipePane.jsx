@@ -17,8 +17,8 @@ function RecipePane({
 
   return (
     <div className="p-2 h-full flex flex-col gap-1">
-      <div className="text-[11px] mb-1 text-muted font-sans">
-        TEMPLATES
+      <div className="text-[11px] mb-1 text-muted font-mono">
+        [ TEMPLATES ]
       </div>
       <TemplateDropdown
         templates={templates}
@@ -27,8 +27,8 @@ function RecipePane({
       />
 
       <div className="mt-1 border-t border-border pt-1">
-        <div className="text-[11px] mb-1 text-muted font-sans">
-          MUTATION STRATEGIES
+        <div className="text-[11px] mb-1 text-muted font-mono">
+          [ MUTATION STRATEGIES ]
         </div>
 
         <div className="flex-1 overflow-y-auto max-h-[calc(100%-2rem)]">
