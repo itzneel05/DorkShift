@@ -7,6 +7,8 @@ DorkShift is a client-side single-page web application for security research, ex
 
 No backend. No database. No API calls. Everything runs in the browser. No installation required — it's a ready-to-use website hosted on GitHub Pages.
 
+<img src="public/screenshot.png" alt="DorkShift screenshot" width="600">
+
 ## Key Features
 
 - **Semantic vocabulary expansion** — single keyword → dozens of semantically equivalent variants
