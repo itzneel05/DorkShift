@@ -31,6 +31,7 @@ function App() {
   const [selectedTemplate, setSelectedTemplate] = useState(null)
   const [isRunning, setIsRunning] = useState(false)
   const [lastDuration, setLastDuration] = useState(0)
+  const [lastStats, setLastStats] = useState({ dedupCount: 0, wasCapped: false })
 
   const classifyTimer = useRef(null)
 
@@ -149,14 +150,16 @@ function App() {
 
         const variants = expandVocabulary(selectedCategory, { max_variants: 50 })
 
+        const maxOutput = 25
         const mutatedDorks = runMutations(variants, selectedCategory, {
           mutations: enabledMutationIds,
           mutationConfigs,
           frameworkData: frameworksData,
-          maxOutput: 25,
+          maxOutput,
         })
 
         const deduped = deduplicate(mutatedDorks, 'lowercase')
+        const dedupCount = mutatedDorks.length - deduped.length
 
         const platformResults = {}
         for (const pid of activePlatformIds) {
@@ -169,9 +172,11 @@ function App() {
         const endTime = performance.now()
         const duration = Math.round(endTime - startTime)
 
+        const wasCapped = Object.values(platformResults).some((dorks) => dorks.length >= maxOutput)
         const formatted = formatOutput(platformResults, selectedCategory, mutationConfigs, duration)
         setResults(formatted)
         setLastDuration(duration)
+        setLastStats({ dedupCount, wasCapped })
       } catch (err) {
         console.error('RUN error:', err)
       } finally {
@@ -219,6 +224,7 @@ function App() {
           platforms={platformsData}
           selectedCategory={selectedCategory}
           duration={lastDuration}
+          stats={lastStats}
         />
       </div>
     </div>
