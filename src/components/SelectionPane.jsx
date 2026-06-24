@@ -64,6 +64,7 @@ function SelectionPane({
             platforms={platforms}
             activePlatformIds={activePlatformIds}
             onPlatformToggle={onPlatformToggle}
+            targetState={targetState}
           />
         </div>
       </div>
